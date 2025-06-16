@@ -1,0 +1,29 @@
+/* Global Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Custom utility classes for specific app needs */
+.status-success {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+/* Code block styling */
+code {
+    background-color: #f3f4f6;
+    padding: 0.125rem 0.375rem;
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+}
+
+/* Link hover effects */
+a {
+    transition: color 0.2s ease;
+}
+
+a:hover {
+    opacity: 0.8;
+}

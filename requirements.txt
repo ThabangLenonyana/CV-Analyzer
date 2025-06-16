@@ -1,0 +1,21 @@
+# Google Gemini API client library
+google-genai
+python-dotenv
+
+# Testing
+pytest
+
+# Web framework
+fastapi
+uvicorn
+jinja2
+
+# File parsing
+PyPDF2
+python-docx
+
+# HTTP client
+httpx
+
+# File upload support
+python-multipart
