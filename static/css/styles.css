@@ -27,3 +27,263 @@ a {
 a:hover {
     opacity: 0.8;
 }
+
+/* Loader Animation */
+.loader {
+    border-top-color: #3498db;
+    -webkit-animation: spinner 1.5s linear infinite;
+    animation: spinner 1.5s linear infinite;
+}
+
+@-webkit-keyframes spinner {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spinner {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Upload Area Styles */
+.upload-area {
+    transition: all 0.3s ease;
+}
+
+.upload-area:hover {
+    border-color: #3b82f6;
+}
+
+/* File Preview Styles */
+.file-preview {
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Message Toast Styles */
+.message-toast {
+    animation: slideInRight 0.3s ease;
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Results Section Animations */
+.results-section {
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Navigation Styles */
+nav {
+    backdrop-filter: blur(10px);
+}
+
+/* Gauge Chart Container */
+#scoreGauge {
+    max-width: 200px;
+    max-height: 200px;
+}
+
+/* Card Hover Effects */
+.bg-white {
+    transition: box-shadow 0.2s ease;
+}
+
+.bg-white:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Skill Badge Animations */
+.skill-item {
+    animation: slideInLeft 0.3s ease;
+    animation-fill-mode: both;
+}
+
+.skill-item:nth-child(1) { animation-delay: 0.1s; }
+.skill-item:nth-child(2) { animation-delay: 0.2s; }
+.skill-item:nth-child(3) { animation-delay: 0.3s; }
+.skill-item:nth-child(4) { animation-delay: 0.4s; }
+.skill-item:nth-child(5) { animation-delay: 0.5s; }
+
+/* Score Cards Animation */
+.score-display {
+    animation: scaleIn 0.5s ease;
+    animation-fill-mode: both;
+}
+
+/* Button Hover Effects */
+button {
+    transition: all 0.2s ease;
+}
+
+button:not(:disabled):hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+button:not(:disabled):active {
+    transform: translateY(0);
+}
+
+/* Tab Button Transitions */
+.tab-button {
+    transition: all 0.2s ease;
+}
+
+/* JSON Textarea Styling */
+.json-textarea {
+    font-family: 'Courier New', Courier, monospace;
+    tab-size: 2;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 640px) {
+    .grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .no-print,
+    nav,
+    button {
+        display: none !important;
+    }
+    
+    .container {
+        max-width: 100% !important;
+    }
+    
+    .bg-white {
+        box-shadow: none !important;
+        border: 1px solid #e5e7eb;
+    }
+}
+
+/* Dark Mode Support (optional) */
+@media (prefers-color-scheme: dark) {
+    /* Add dark mode styles here if needed */
+}
+
+/* Accessibility Improvements */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* Focus Styles */
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Custom Scrollbar for Results */
+.results-section {
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 #f3f4f6;
+}
+
+.results-section::-webkit-scrollbar {
+    width: 8px;
+}
+
+.results-section::-webkit-scrollbar-track {
+    background: #f3f4f6;
+}
+
+.results-section::-webkit-scrollbar-thumb {
+    background-color: #cbd5e1;
+    border-radius: 4px;
+}
+
+/* Smooth Transitions */
+[x-cloak] { 
+    display: none !important; 
+}
+
+/* View Transitions */
+[x-transition] {
+    transition: opacity 0.3s ease;
+}
+
+/* Match Quality Indicators */
+.match-indicator {
+    transition: all 0.2s ease;
+}
+
+/* Red Flag Pulse Animation */
+.bg-red-50 {
+    animation: subtlePulse 2s infinite;
+}
+
+@keyframes subtlePulse {
+    0%, 100% {
+        background-color: #fef2f2;
+    }
+    50% {
+        background-color: #fee2e2;
+    }
+}
+
+/* Responsive Grid Adjustments */
+@media (max-width: 1024px) {
+    .lg\:grid-cols-2 {
+        grid-template-columns: 1fr;
+    }
+}
