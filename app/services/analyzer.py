@@ -13,6 +13,7 @@ from app.models.schemas import (
     DetailedAnalysis, SkillMatch, ExperienceMatch, EducationMatch,
     JobRequirement
 )
+from app.services.cv_processor import cv_processor
 
 # Configure logging
 logger = logging.getLogger(__name__)
@@ -668,5 +669,24 @@ async def analyze_cv_job_match(structured_cv: StructuredCV, structured_job: Stru
     Returns:
         AnalysisResponse with complete analysis
     """
+    analyzer = get_cv_analyzer()
+    return await analyzer.analyze_cv_for_job(structured_cv, structured_job, detailed)
+
+# Convenience function for analyzing CV by ID
+async def analyze_cv_job_match_by_id(cv_id: int, structured_job: StructuredJobDescription, detailed: bool = True) -> AnalysisResponse:
+    """
+    Analyze CV against job description using stored CV data
+    
+    Args:
+        cv_id: ID of the stored CV
+        structured_job: Parsed job description data
+        detailed: Include detailed analysis
+        
+    Returns:
+        AnalysisResponse with complete analysis
+    """
+    # Get structured CV from stored data without re-parsing
+    structured_cv = cv_processor.get_structured_cv(cv_id)
+    
     analyzer = get_cv_analyzer()
     return await analyzer.analyze_cv_for_job(structured_cv, structured_job, detailed)

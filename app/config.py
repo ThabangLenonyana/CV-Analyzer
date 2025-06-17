@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 from typing import List
+from pathlib import Path
 
 # Load environment variables from .env file
 load_dotenv()
@@ -30,6 +31,15 @@ class Config:
     
     # API Rate Limiting (for future implementation)
     RATE_LIMIT_PER_MINUTE = int(os.getenv("RATE_LIMIT_PER_MINUTE", "10"))
+    
+    # Database settings
+    DATABASE_TYPE = os.getenv("DATABASE_TYPE", "sqlite")
+    DATABASE_NAME = os.getenv("DATABASE_NAME", "cv_analyzer.db")
+    DATABASE_USER = os.getenv("DATABASE_USER", "")
+    DATABASE_PASSWORD = os.getenv("DATABASE_PASSWORD", "")
+    DATABASE_HOST = os.getenv("DATABASE_HOST", "localhost")
+    DATABASE_PORT = os.getenv("DATABASE_PORT", "5432")
+    DATABASE_ECHO: bool = os.getenv("DATABASE_ECHO", "false").lower() == "true"
     
     @classmethod
     def validate(cls):
@@ -69,6 +79,17 @@ class Config:
             return False
         extension = filename.rsplit(".", 1)[1].lower()
         return extension in cls.get_allowed_extensions_set()
+    
+    @property
+    def DATABASE_URL(self) -> str:
+        """Get database URL with proper configuration"""
+        if self.DATABASE_TYPE == "sqlite":
+            # Use absolute path for SQLite
+            db_path = Path(self.DATABASE_NAME).absolute()
+            return f"sqlite:///{db_path}?mode=wal"  # Enable WAL mode for better concurrency
+        else:
+            # For other databases (PostgreSQL, MySQL, etc.)
+            return f"{self.DATABASE_TYPE}://{self.DATABASE_USER}:{self.DATABASE_PASSWORD}@{self.DATABASE_HOST}:{self.DATABASE_PORT}/{self.DATABASE_NAME}"
 
 # Create a global config instance
 config = Config()

@@ -39,7 +39,7 @@ class GeminiCVParser:
             logger.error(f"Error configuring Gemini API: {str(e)}")
             raise CVParsingError(f"Failed to configure Gemini API: {str(e)}")
     
-    async def parse_cv_from_file(self, file_path: str) -> StructuredCV:
+    async def parse_cv_from_file(self, file_path: str) -> tuple[StructuredCV, Dict[str, Any]]:
         """
         Parse CV from a file using Gemini Vision
         
@@ -47,7 +47,7 @@ class GeminiCVParser:
             file_path: Path to the CV file (PDF, DOCX, or image)
             
         Returns:
-            StructuredCV object with extracted information
+            Tuple of (StructuredCV object, raw parsed JSON)
         """
         try:
             # Validate file exists
@@ -60,16 +60,13 @@ class GeminiCVParser:
                 file_content = f.read()
             
             # Parse CV with retry logic
-            result = await self._parse_with_retry(file_content, file_path)
+            raw_parsed_json = await self._parse_with_retry(file_content, file_path)
             
             # Validate and structure the result
-            structured_cv = self._validate_and_structure(result)
+            structured_cv = self._validate_and_structure(raw_parsed_json)
             
-            # Extract raw text if not provided
-            if not structured_cv.raw_text:
-                structured_cv.raw_text = await self._extract_raw_text(file_content, file_path)
-            
-            return structured_cv
+            # Return both structured CV and raw JSON
+            return structured_cv, raw_parsed_json
             
         except Exception as e:
             logger.error(f"Error parsing CV: {str(e)}")
@@ -382,15 +379,15 @@ def get_cv_parser() -> GeminiCVParser:
     return _parser_instance
 
 # Convenience function for direct usage
-async def parse_cv(file_path: str) -> StructuredCV:
+async def parse_cv(file_path: str) -> tuple[StructuredCV, Dict[str, Any]]:
     """
-    Parse a CV file and return structured data
+    Parse a CV file and return structured data with raw JSON
     
     Args:
         file_path: Path to CV file
         
     Returns:
-        StructuredCV object with extracted information
+        Tuple of (StructuredCV object, raw parsed JSON)
     """
     parser = get_cv_parser()
     return await parser.parse_cv_from_file(file_path)
