@@ -2,6 +2,7 @@ import os
 from dotenv import load_dotenv
 from typing import List
 from pathlib import Path
+import shutil
 
 # Load environment variables from .env file
 load_dotenv()
@@ -9,15 +10,32 @@ load_dotenv()
 class Config:
     """Application configuration class"""
     
+    # Railway Detection
+    IS_RAILWAY = bool(os.getenv("RAILWAY_ENVIRONMENT"))
+    
+    # Data Directory Configuration
+    if IS_RAILWAY:
+        # Use Railway's persistent volume
+        DATA_DIR = "/data"
+        os.makedirs(DATA_DIR, exist_ok=True)
+    else:
+        # Use local directory
+        DATA_DIR = "."
+    
     # Google Gemini Configuration
     GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
-    GEMINI_MODEL = os.getenv("GEMINI_MODEL")
+    GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-1.5-flash")
     
     # File Upload Configuration
     MAX_FILE_SIZE_MB = int(os.getenv("MAX_FILE_SIZE_MB", "10"))
     MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024
     ALLOWED_EXTENSIONS = os.getenv("ALLOWED_EXTENSIONS", "pdf,docx").split(",")
-    UPLOAD_FOLDER = os.getenv("UPLOAD_FOLDER", "uploads")
+    
+    # Set upload folder based on environment
+    if IS_RAILWAY:
+        UPLOAD_FOLDER = f"{DATA_DIR}/uploads"
+    else:
+        UPLOAD_FOLDER = os.getenv("UPLOAD_FOLDER", "uploads")
     
     # Application Configuration
     APP_NAME = "CV Analyzer"
@@ -42,9 +60,29 @@ class Config:
     DATABASE_ECHO: bool = os.getenv("DATABASE_ECHO", "false").lower() == "true"
     
     @classmethod
+    def setup_railway_persistence(cls):
+        """Set up persistent storage on Railway"""
+        if not cls.IS_RAILWAY:
+            return
+        
+        # Copy database to persistent volume if it doesn't exist there
+        local_db = cls.DATABASE_NAME
+        persistent_db = f"{cls.DATA_DIR}/{cls.DATABASE_NAME}"
+        
+        if os.path.exists(local_db) and not os.path.exists(persistent_db):
+            print(f"Copying database to persistent volume: {persistent_db}")
+            shutil.copy2(local_db, persistent_db)
+        
+        # Update database name to use persistent path
+        cls.DATABASE_NAME = persistent_db
+    
+    @classmethod
     def validate(cls):
         """Validate required configuration"""
         errors = []
+        
+        # Set up Railway persistence before validation
+        cls.setup_railway_persistence()
         
         if not cls.GEMINI_API_KEY:
             errors.append("GEMINI_API_KEY environment variable is required")

@@ -1,0 +1,11 @@
+# Python version
+[phases.setup]
+nixPkgs = ["python311", "gcc"]
+
+# Install dependencies
+[phases.install]
+cmds = ["pip install -r requirements.txt"]
+
+# Start command
+[start]
+cmd = "python -m app.main"

@@ -57,9 +57,16 @@ app.add_middleware(
 )
 
 # Create directories if they don't exist
-os.makedirs("static/css", exist_ok=True)
-os.makedirs("static/js", exist_ok=True)
-os.makedirs("templates", exist_ok=True)
+if config.IS_RAILWAY:
+    # On Railway, create directories in persistent volume
+    os.makedirs(f"{config.DATA_DIR}/static/css", exist_ok=True)
+    os.makedirs(f"{config.DATA_DIR}/static/js", exist_ok=True)
+    os.makedirs(f"{config.DATA_DIR}/templates", exist_ok=True)
+else:
+    # Local development
+    os.makedirs("static/css", exist_ok=True)
+    os.makedirs("static/js", exist_ok=True)
+    os.makedirs("templates", exist_ok=True)
 
 # Mount static files
 if os.path.exists("static"):

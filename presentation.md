@@ -1,7 +1,4 @@
-# CV Analyzer: Technical Architecture & Implementation
-## AI-Powered Resume-Job Matching System
-
----
+# AI-Powered Resume-Job Matching System: Technical Architecture & Implementation
 
 ## Executive Summary
 
