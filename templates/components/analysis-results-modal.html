@@ -1,0 +1,328 @@
+<div class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <!-- Background overlay -->
+        <div @click="showDetailedResults = false" 
+             class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" 
+             aria-hidden="true"></div>
+
+        <!-- Modal panel -->
+        <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-5xl sm:w-full">
+            <div class="bg-white">
+                <!-- Header -->
+                <div class="bg-gradient-to-r from-[#0B2545] to-[#134E7B] px-6 py-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-xl font-bold text-white">Comprehensive CV Analysis Report</h3>
+                            <p class="text-sm text-gray-200 mt-1">
+                                <span x-text="cvData?.contact_info?.name || 'Candidate'"></span> • 
+                                <span x-text="selectedJob?.title || selectedJob?.job_title || 'Position'"></span> at 
+                                <span x-text="selectedJob?.company || 'Company'"></span>
+                            </p>
+                        </div>
+                        <button @click="showDetailedResults = false" 
+                                class="text-white hover:text-gray-200 transition-colors">
+                            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Content -->
+                <div class="px-6 py-4 max-h-[calc(100vh-200px)] overflow-y-auto">
+                    <!-- Executive Summary -->
+                    <div class="mb-8">
+                        <h4 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
+                            <svg class="w-5 h-5 mr-2 text-[#ffb300]" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                            </svg>
+                            Executive Summary
+                        </h4>
+                        
+                        <!-- Overall Score Card -->
+                        <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-6 mb-4">
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div class="text-center md:text-left">
+                                    <div class="inline-flex items-baseline">
+                                        <span class="text-6xl font-bold"
+                                              :class="{
+                                                 'text-green-600': analysisResult?.suitability_score >= 70,
+                                                 'text-yellow-600': analysisResult?.suitability_score >= 50 && analysisResult?.suitability_score < 70,
+                                                 'text-red-600': analysisResult?.suitability_score < 50
+                                              }"
+                                              x-text="analysisResult?.suitability_score"></span>
+                                        <span class="text-2xl font-medium text-gray-600 ml-1">%</span>
+                                    </div>
+                                    <p class="text-lg font-medium text-gray-900 mt-2">Overall Suitability Score</p>
+                                    <div class="mt-3 flex items-center justify-center md:justify-start space-x-2">
+                                        <span class="px-3 py-1 text-sm font-medium rounded-full"
+                                              :class="{
+                                                 'bg-green-100 text-green-800': analysisResult?.suitability_score >= 70,
+                                                 'bg-yellow-100 text-yellow-800': analysisResult?.suitability_score >= 50 && analysisResult?.suitability_score < 70,
+                                                 'bg-red-100 text-red-800': analysisResult?.suitability_score < 50
+                                              }">
+                                            <span x-text="
+                                                analysisResult?.suitability_score >= 70 ? 'Strong Match' :
+                                                analysisResult?.suitability_score >= 50 ? 'Moderate Match' : 'Developing Match'
+                                            "></span>
+                                        </span>
+                                    </div>
+                                </div>
+                                
+                                <div class="space-y-3">
+                                    <!-- Technical Score -->
+                                    <div>
+                                        <div class="flex justify-between items-center mb-1">
+                                            <span class="text-sm font-medium text-gray-700">Technical Skills</span>
+                                            <span class="text-sm font-bold text-gray-900">
+                                                <span x-text="analysisResult?.technical_score || 0"></span>%
+                                            </span>
+                                        </div>
+                                        <div class="w-full bg-gray-200 rounded-full h-2">
+                                            <div class="bg-blue-600 h-2 rounded-full transition-all duration-300" 
+                                                 :style="'width: ' + (analysisResult?.technical_score || 0) + '%'"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Experience Score -->
+                                    <div>
+                                        <div class="flex justify-between items-center mb-1">
+                                            <span class="text-sm font-medium text-gray-700">Experience</span>
+                                            <span class="text-sm font-bold text-gray-900">
+                                                <span x-text="analysisResult?.experience_score || 0"></span>%
+                                            </span>
+                                        </div>
+                                        <div class="w-full bg-gray-200 rounded-full h-2">
+                                            <div class="bg-green-600 h-2 rounded-full transition-all duration-300" 
+                                                 :style="'width: ' + (analysisResult?.experience_score || 0) + '%'"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Education Score -->
+                                    <div>
+                                        <div class="flex justify-between items-center mb-1">
+                                            <span class="text-sm font-medium text-gray-700">Education</span>
+                                            <span class="text-sm font-bold text-gray-900">
+                                                <span x-text="analysisResult?.education_score || 0"></span>%
+                                            </span>
+                                        </div>
+                                        <div class="w-full bg-gray-200 rounded-full h-2">
+                                            <div class="bg-purple-600 h-2 rounded-full transition-all duration-300" 
+                                                 :style="'width: ' + (analysisResult?.education_score || 0) + '%'"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Scoring Rationale -->
+                        <div class="bg-blue-50 border-l-4 border-blue-400 p-4 rounded">
+                            <p class="text-sm text-gray-700" x-text="analysisResult?.scoring_rationale"></p>
+                        </div>
+                    </div>
+
+                    <!-- Skills Analysis Section -->
+                    <div class="mb-8">
+                        <h4 class="text-lg font-bold text-gray-900 mb-4">Skills Analysis</h4>
+                        
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <!-- Matching Skills -->
+                            <div class="bg-green-50 rounded-lg p-5">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h5 class="font-semibold text-green-900 flex items-center">
+                                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                        </svg>
+                                        Matching Skills
+                                    </h5>
+                                    <span class="text-sm font-medium text-green-700">
+                                        <span x-text="(analysisResult?.matching_skills || []).length"></span> skills
+                                    </span>
+                                </div>
+                                <div class="space-y-2 max-h-64 overflow-y-auto">
+                                    <template x-for="skill in (analysisResult?.matching_skills || [])" :key="skill">
+                                        <div class="bg-white px-3 py-2 rounded-md border border-green-200">
+                                            <span class="text-sm text-gray-800" x-text="skill"></span>
+                                        </div>
+                                    </template>
+                                    <div x-show="(analysisResult?.matching_skills || []).length === 0" 
+                                         class="text-sm text-green-700 italic">No matching skills identified</div>
+                                </div>
+                            </div>
+
+                            <!-- Missing Skills -->
+                            <div class="bg-red-50 rounded-lg p-5">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h5 class="font-semibold text-red-900 flex items-center">
+                                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                                        </svg>
+                                        Skills Gap
+                                    </h5>
+                                    <span class="text-sm font-medium text-red-700">
+                                        <span x-text="(analysisResult?.missing_skills || []).length"></span> skills
+                                    </span>
+                                </div>
+                                <div class="space-y-2 max-h-64 overflow-y-auto">
+                                    <template x-for="skill in (analysisResult?.missing_skills || [])" :key="skill">
+                                        <div class="bg-white px-3 py-2 rounded-md border border-red-200">
+                                            <span class="text-sm text-gray-800" x-text="skill"></span>
+                                        </div>
+                                    </template>
+                                    <div x-show="(analysisResult?.missing_skills || []).length === 0" 
+                                         class="text-sm text-red-700 italic">All required skills are present</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Detailed Analysis (if available) -->
+                    <div x-show="analysisResult?.detailed_analysis" class="mb-8">
+                        <h4 class="text-lg font-bold text-gray-900 mb-4">Detailed Analysis</h4>
+                        
+                        <!-- Technical Strengths & Gaps -->
+                        <div x-show="analysisResult?.detailed_analysis?.technical_strengths?.length > 0 || 
+                                     analysisResult?.detailed_analysis?.technical_gaps?.length > 0" 
+                             class="mb-6">
+                            <h5 class="font-semibold text-gray-800 mb-3">Technical Assessment</h5>
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div x-show="analysisResult?.detailed_analysis?.technical_strengths?.length > 0">
+                                    <p class="text-sm font-medium text-green-700 mb-2">Strengths:</p>
+                                    <ul class="list-disc list-inside space-y-1">
+                                        <template x-for="strength in (analysisResult?.detailed_analysis?.technical_strengths || [])" :key="strength">
+                                            <li class="text-sm text-gray-700" x-text="strength"></li>
+                                        </template>
+                                    </ul>
+                                </div>
+                                <div x-show="analysisResult?.detailed_analysis?.technical_gaps?.length > 0">
+                                    <p class="text-sm font-medium text-red-700 mb-2">Areas for Improvement:</p>
+                                    <ul class="list-disc list-inside space-y-1">
+                                        <template x-for="gap in (analysisResult?.detailed_analysis?.technical_gaps || [])" :key="gap">
+                                            <li class="text-sm text-gray-700" x-text="gap"></li>
+                                        </template>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Experience Analysis -->
+                        <div x-show="analysisResult?.detailed_analysis?.experience_strengths?.length > 0 || 
+                                     analysisResult?.detailed_analysis?.experience_gaps?.length > 0" 
+                             class="mb-6">
+                            <h5 class="font-semibold text-gray-800 mb-3">Experience Assessment</h5>
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div x-show="analysisResult?.detailed_analysis?.experience_strengths?.length > 0">
+                                    <p class="text-sm font-medium text-green-700 mb-2">Relevant Experience:</p>
+                                    <ul class="list-disc list-inside space-y-1">
+                                        <template x-for="strength in (analysisResult?.detailed_analysis?.experience_strengths || [])" :key="strength">
+                                            <li class="text-sm text-gray-700" x-text="strength"></li>
+                                        </template>
+                                    </ul>
+                                </div>
+                                <div x-show="analysisResult?.detailed_analysis?.experience_gaps?.length > 0">
+                                    <p class="text-sm font-medium text-red-700 mb-2">Experience Gaps:</p>
+                                    <ul class="list-disc list-inside space-y-1">
+                                        <template x-for="gap in (analysisResult?.detailed_analysis?.experience_gaps || [])" :key="gap">
+                                            <li class="text-sm text-gray-700" x-text="gap"></li>
+                                        </template>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recommendations -->
+                    <div x-show="(analysisResult?.recommendations || []).length > 0" class="mb-8">
+                        <h4 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
+                            <svg class="w-5 h-5 mr-2 text-[#ffb300]" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
+                                <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"/>
+                            </svg>
+                            Recommendations
+                        </h4>
+                        <div class="bg-yellow-50 rounded-lg p-5">
+                            <ul class="space-y-3">
+                                <template x-for="(rec, index) in (analysisResult?.recommendations || [])" :key="index">
+                                    <li class="flex items-start">
+                                        <span class="flex-shrink-0 w-6 h-6 bg-[#ffb300] text-white rounded-full flex items-center justify-center text-xs font-medium mt-0.5">
+                                            <span x-text="index + 1"></span>
+                                        </span>
+                                        <span class="ml-3 text-sm text-gray-700" x-text="rec"></span>
+                                    </li>
+                                </template>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Red Flags / Concerns -->
+                    <div x-show="(analysisResult?.red_flags || []).length > 0" class="mb-8">
+                        <h4 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
+                            <svg class="w-5 h-5 mr-2 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                            </svg>
+                            Areas of Concern
+                        </h4>
+                        <div class="bg-red-50 border-l-4 border-red-400 rounded-lg p-5">
+                            <ul class="space-y-2">
+                                <template x-for="(flag, index) in (analysisResult?.red_flags || [])" :key="index">
+                                    <li class="flex items-start">
+                                        <svg class="w-4 h-4 text-red-600 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                                        </svg>
+                                        <span class="ml-2 text-sm text-gray-700" x-text="flag"></span>
+                                    </li>
+                                </template>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Analysis Metadata -->
+                    <div class="border-t border-gray-200 pt-6">
+                        <h4 class="text-sm font-semibold text-gray-700 mb-3">Analysis Information</h4>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                            <div>
+                                <p class="text-gray-500">Analysis Date</p>
+                                <p class="font-medium text-gray-900" x-text="formatDate(analysisResult?.analysis_date || new Date())"></p>
+                            </div>
+                            <div>
+                                <p class="text-gray-500">Candidate</p>
+                                <p class="font-medium text-gray-900" x-text="cvData?.contact_info?.name || 'Unknown'"></p>
+                            </div>
+                            <div>
+                                <p class="text-gray-500">Position</p>
+                                <p class="font-medium text-gray-900" x-text="selectedJob?.title || selectedJob?.job_title || 'Unknown'"></p>
+                            </div>
+                            <div>
+                                <p class="text-gray-500">Company</p>
+                                <p class="font-medium text-gray-900" x-text="selectedJob?.company || 'Unknown'"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="bg-gray-50 px-6 py-4 border-t border-gray-200">
+                    <div class="flex justify-between items-center">
+                        <button @click="showDetailedResults = false" 
+                                class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors">
+                            Close
+                        </button>
+                        <div class="flex items-center space-x-3">
+                            <button @click="exportResults()" 
+                                    class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors flex items-center">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                                Export PDF
+                            </button>
+                            <button @click="startNewAnalysis(); showDetailedResults = false" 
+                                    class="px-4 py-2 text-sm font-medium text-white bg-[#ffd54e] rounded-md hover:bg-[#ffca28] transition-colors">
+                                New Analysis
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

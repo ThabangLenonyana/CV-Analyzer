@@ -51,7 +51,7 @@ class JobDescriptionService:
     
     def get_job_description(self, job_id: int) -> Dict[str, Any]:
         """Get job description by ID"""
-        job_data = self.repository.get_by_id(job_id)
+        job_data = self.repository.get(job_id)  # Changed from get_by_id to get
         if not job_data:
             raise HTTPException(status_code=404, detail="Job description not found")
         return job_data.to_dict()

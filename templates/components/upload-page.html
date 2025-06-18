@@ -1,0 +1,857 @@
+<div class="space-y-6">
+    <!-- Page Header -->
+    <div class="bg-white border-b border-gray-200 py-6 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex items-start justify-between">
+                <!-- Left side: Title and flow -->
+                <div class="flex-1">
+                    <h1 class="text-2xl font-bold text-gray-900 mb-2">CV Analysis</h1>
+                    <p class="text-sm text-gray-600 mb-4">Match your CV with job descriptions to get instant compatibility insights</p>
+                    
+                    <!-- Simple flow diagram -->
+                    <div class="flex items-center space-x-2 text-xs">
+                        <div class="flex items-center">
+                            <div class="w-8 h-8 bg-[#ffd54e] rounded-full flex items-center justify-center">
+                                <span class="text-[#0B2545] font-medium">1</span>
+                            </div>
+                            <span class="ml-2 text-gray-600">Upload CV</span>
+                        </div>
+                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                        <div class="flex items-center">
+                            <div class="w-8 h-8 bg-[#ffd54e] rounded-full flex items-center justify-center">
+                                <span class="text-[#0B2545] font-medium">2</span>
+                            </div>
+                            <span class="ml-2 text-gray-600">Select Job</span>
+                        </div>
+                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                        <div class="flex items-center">
+                            <div class="w-8 h-8 bg-[#ffd54e] rounded-full flex items-center justify-center">
+                                <span class="text-[#0B2545] font-medium">3</span>
+                            </div>
+                            <span class="ml-2 text-gray-600">Get Results</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Right side: Search and quick actions -->
+                <div class="flex flex-col space-y-3">
+                    <!-- Search bar -->
+                    <div class="relative">
+                        <input type="text" 
+                               placeholder="Search CVs, jobs, or analyses..."
+                               class="w-64 pl-10 pr-4 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#ffd54e] focus:border-[#ffd54e]">
+                        <svg class="absolute left-3 top-2.5 h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </div>
+                    
+                    <!-- Quick action buttons -->
+                    <div class="flex flex-wrap gap-2">
+                        <button @click="showAllRecentCVs()" 
+                                class="px-3 py-1.5 text-xs font-medium text-[#0B2545] bg-[#ffd54e] border border-[#ffd54e] rounded-md hover:bg-[#ffd54e]/30 transition-colors">
+                            <svg class="w-3.5 h-3.5 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            View CVs
+                        </button>
+                        <button @click="showAllRecentAnalyses()" 
+                                class="px-3 py-1.5 text-xs font-medium text-[#0B2545] bg-[#ffd54e] border border-[#ffd54e] rounded-md hover:bg-[#ffd54e]/30 transition-colors">
+                            <svg class="w-3.5 h-3.5 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            Analysis History
+                        </button>
+                        <button @click="navigateTo('jobs')" 
+                                class="px-3 py-1.5 text-xs font-medium text-[#0B2545] bg-[#ffd54e] border border-[#ffd54e] rounded-md hover:bg-[#ffd54e]/30 transition-colors">
+                            <svg class="w-3.5 h-3.5 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
+                            Manage Jobs
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Grid Layout -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Left Column: CV Upload & Job Selection -->
+        <div class="lg:col-span-2 space-y-6">
+            <!-- CV Upload Section -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <h2 class="text-lg font-semibold text-[#0B2545]">Upload CV</h2>
+                        <p class="text-sm text-gray-500 mt-1">Upload your CV to analyze job compatibility</p>
+                    </div>
+                    <div x-show="cvData && !uploadingCV" class="flex items-center text-sm text-green-600">
+                        <svg class="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                        </svg>
+                        CV Uploaded
+                    </div>
+                </div>
+
+                <!-- Upload Progress Indicator -->
+                <div x-show="uploadingCV" class="mb-4">
+                    <div class="bg-[#ffd54e]/10 border border-[#ffd54e] rounded-lg p-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-medium text-[#0B2545]">Processing CV...</span>
+                            <span class="text-sm text-[#ffb300]" x-text="uploadProgress + '%'"></span>
+                        </div>
+                        <div class="w-full bg-[#ffd54e]/20 rounded-full h-2">
+                            <div class="bg-[#ffd54e] h-2 rounded-full transition-all duration-300" 
+                                 :style="'width: ' + uploadProgress + '%'"></div>
+                        </div>
+                        <div class="mt-3 space-y-2">
+                            <div class="flex items-center text-sm" :class="uploadStep >= 1 ? 'text-[#0B2545]' : 'text-gray-500'">
+                                <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                </svg>
+                                <span>Uploading file...</span>
+                            </div>
+                            <div class="flex items-center text-sm" :class="uploadStep >= 2 ? 'text-[#0B2545]' : 'text-gray-500'">
+                                <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                </svg>
+                                <span>Extracting text...</span>
+                            </div>
+                            <div class="flex items-center text-sm" :class="uploadStep >= 3 ? 'text-[#0B2545]' : 'text-gray-500'">
+                                <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                </svg>
+                                <span>Parsing information...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Upload Area -->
+                <div x-show="!cvData && !uploadingCV">
+                    <div class="border-2 border-dashed border-[#134E7B] rounded-lg p-8 text-center transition-all duration-200 hover:border-[#0B2545] hover:bg-[#0B2545]/5"
+                         @dragover.prevent="dragover = true"
+                         @dragleave.prevent="dragover = false"
+                         @drop.prevent="handleDrop($event)"
+                         :class="{'border-[#ffd54e] bg-[#ffd54e]/10': dragover}">
+                        
+                        <input type="file" 
+                               id="cv-upload" 
+                               accept=".pdf,.docx"
+                               @change="handleFileUpload($event)"
+                               class="hidden">
+                        
+                        <label for="cv-upload" class="cursor-pointer">
+                            <svg class="mx-auto h-12 w-12 text-[#134E7B]" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                                <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                            <div class="mt-4">
+                                <p class="text-lg font-medium text-[#0B2545]">Click to upload CV</p>
+                                <p class="text-sm text-gray-500 mt-1">or drag and drop</p>
+                                <p class="text-xs text-gray-400 mt-2">PDF or DOCX files only</p>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Enhanced CV Info Display -->
+                <div x-show="cvData && !uploadingCV" 
+                     x-transition:enter="transition ease-out duration-300"
+                     x-transition:enter-start="opacity-0 transform scale-95"
+                     x-transition:enter-end="opacity-100 transform scale-100"
+                     class="bg-gradient-to-br from-white to-gray-50 border border-gray-200 rounded-lg shadow-sm overflow-hidden">
+                    
+                    <!-- Header with gradient background -->
+                    <div class="bg-gradient-to-r from-[#0B2545] to-[#134E7B] px-5 py-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <div class="bg-white/10 p-2 rounded-lg">
+                                    <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold text-white text-lg" x-text="cvData?.contact_info?.name || 'CV Summary'"></h3>
+                                    <p class="text-xs text-gray-200" x-text="cvData?.contact_info?.email || 'Contact information'"></p>
+                                </div>
+                            </div>
+                            <button @click="clearCV()" 
+                                    class="text-white/80 hover:text-white transition-colors p-1">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="p-5 space-y-5">
+                        <!-- Contact Information Grid -->
+                        <div>
+                            <h4 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Contact Information</h4>
+                            <div class="grid grid-cols-2 gap-x-6 gap-y-3">
+                                <div class="flex items-center space-x-2">
+                                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                                    </svg>
+                                    <span class="text-sm text-gray-700" x-text="cvData?.contact_info?.phone || 'No phone'"></span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    </svg>
+                                    <span class="text-sm text-gray-700" x-text="cvData?.contact_info?.location || 'No location'"></span>
+                                </div>
+                                
+                                <!-- Social Links -->
+                                <div x-show="cvData?.contact_info?.linkedin" class="flex items-center space-x-2">
+                                    <svg class="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M10 0C4.477 0 0 4.477 0 10c0 5.523 4.477 10 10 10 5.523 0 10-4.477 10-10 0-5.523-4.477-10-10-10zM7.5 14.5h-2v-7h2v7zM6.5 6.5c-.7 0-1.25-.6-1.25-1.25S5.8 4 6.5 4s1.25.6 1.25 1.25S7.2 6.5 6.5 6.5zM15 14.5h-2v-3.5c0-2.3-3-2.1-3 0v3.5H8v-7h2v1.2c1-1.9 5-2 5 1.8v4z"/>
+                                    </svg>
+                                    <a :href="'https://' + (cvData?.contact_info?.linkedin || '').replace(/^https?:\/\//, '')"
+                                       target="_blank"
+                                       class="text-sm text-blue-600 hover:text-blue-700 hover:underline">
+                                        LinkedIn Profile
+                                    </a>
+                                </div>
+                                
+                                <div x-show="cvData?.contact_info?.github" class="flex items-center space-x-2">
+                                    <svg class="w-4 h-4 text-gray-700" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M10 0C4.477 0 0 4.477 0 10c0 4.42 2.865 8.17 6.839 9.49.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0110 4.836c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C17.137 18.167 20 14.42 20 10c0-5.523-4.477-10-10-10z"/>
+                                    </svg>
+                                    <a :href="'https://' + (cvData?.contact_info?.github || '').replace(/^https?:\/\//, '')"
+                                       target="_blank"
+                                       class="text-sm text-gray-700 hover:text-gray-800 hover:underline">
+                                        GitHub Profile
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Professional Summary -->
+                        <div x-show="cvData?.summary" class="bg-gray-50 rounded-lg p-4">
+                            <h4 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Professional Summary</h4>
+                            <p class="text-sm text-gray-700 leading-relaxed line-clamp-3" x-text="cvData?.summary || ''"></p>
+                        </div>
+                        
+                        <!-- Key Metrics -->
+                        <div>
+                            <h4 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Profile Overview</h4>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                <!-- Skills -->
+                                <div class="bg-blue-50 rounded-lg p-3 text-center">
+                                    <div class="text-2xl font-bold text-blue-600" x-text="(cvData?.skills || []).length || 0"></div>
+                                    <div class="text-xs text-blue-700 font-medium">Skills</div>
+                                </div>
+                                
+                                <!-- Experience -->
+                                <div class="bg-green-50 rounded-lg p-3 text-center">
+                                    <div class="text-2xl font-bold text-green-600" x-text="(cvData?.experiences || []).length || 0"></div>
+                                    <div class="text-xs text-green-700 font-medium">Experiences</div>
+                                </div>
+                                
+                                <!-- Education -->
+                                <div class="bg-purple-50 rounded-lg p-3 text-center">
+                                    <div class="text-2xl font-bold text-purple-600" x-text="(cvData?.education || []).length || 0"></div>
+                                    <div class="text-xs text-purple-700 font-medium">Education</div>
+                                </div>
+                                
+                                <!-- Certifications -->
+                                <div class="bg-yellow-50 rounded-lg p-3 text-center">
+                                    <div class="text-2xl font-bold text-yellow-600" x-text="(cvData?.certifications || []).length || 0"></div>
+                                    <div class="text-xs text-yellow-700 font-medium">Certifications</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Additional Metrics -->
+                        <div class="flex items-center justify-between bg-gray-50 rounded-lg px-4 py-3">
+                            <div class="flex items-center space-x-6">
+                                <div class="flex items-center space-x-2">
+                                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                    </svg>
+                                    <div>
+                                        <span class="text-lg font-semibold text-gray-700" x-text="(cvData?.projects || []).length || 0"></span>
+                                        <span class="text-xs text-gray-500 ml-1">Projects</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-center space-x-2">
+                                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+                                    </svg>
+                                    <div>
+                                        <span class="text-lg font-semibold text-gray-700" x-text="(cvData?.languages || []).length || 0"></span>
+                                        <span class="text-xs text-gray-500 ml-1">Languages</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-center space-x-2">
+                                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                    </svg>
+                                    <div>
+                                        <span class="text-lg font-semibold text-gray-700" x-text="Object.keys(cvData?.technical_skills || {}).length || 0"></span>
+                                        <span class="text-xs text-gray-500 ml-1">Tech Areas</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- CV ID Badge -->
+                            <div x-show="cvData && cvData.id" class="text-xs text-gray-400">
+                                ID: <span class="font-mono" x-text="cvData.id"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Job Selection Section -->
+            <div x-show="cvData && !uploadingCV" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <h2 class="text-lg font-semibold text-[#0B2545] mb-4">Select Job Description</h2>
+                
+                <!-- Selected Job Display -->
+                <div x-show="selectedJob" class="mb-4">
+                    <div class="bg-[#0B2545]/5 border border-[#134E7B] rounded-lg p-4">
+                        <div class="flex items-start justify-between">
+                            <div>
+                                <h3 class="font-medium text-[#0B2545]" x-text="selectedJob?.title || selectedJob?.job_title"></h3>
+                                <p class="text-sm text-[#134E7B]" x-text="selectedJob?.company"></p>
+                                <div class="mt-2 flex flex-wrap gap-1">
+                                    <template x-for="skill in (selectedJob?.required_skills || []).slice(0, 5)" :key="skill">
+                                        <span class="inline-block px-2 py-1 text-xs bg-[#ffd54e]/20 text-[#0B2545] border border-[#ffd54e] rounded" x-text="skill"></span>
+                                    </template>
+                                    <span x-show="(selectedJob?.required_skills || []).length > 5" 
+                                          class="inline-block px-2 py-1 text-xs bg-[#ffd54e]/20 text-[#0B2545] border border-[#ffd54e] rounded"
+                                          x-text="'+' + ((selectedJob?.required_skills || []).length - 5) + ' more'"></span>
+                                </div>
+                            </div>
+                            <button @click="clearJobSelection()" class="text-sm text-[#134E7B] hover:text-[#0B2545]">
+                                Change
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Job Search and List -->
+                <div x-show="!selectedJob">
+                    <div class="relative mb-4">
+                        <input type="text" 
+                               x-model="jobSearchQuery"
+                               @input="filterJobs()"
+                               placeholder="Search jobs by title, company, or skills..."
+                               class="w-full pl-10 pr-4 py-2 border border-[#134E7B] rounded-lg focus:ring-2 focus:ring-[#ffd54e] focus:border-[#ffd54e]">
+                        <svg class="absolute left-3 top-2.5 h-5 w-5 text-[#134E7B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </div>
+
+                    <div x-show="loadingJobs" class="text-center py-4">
+                        <div class="inline-block h-6 w-6 animate-spin rounded-full border-2 border-solid border-[#134E7B] border-r-transparent"></div>
+                        <span class="ml-2 text-gray-600">Loading job descriptions...</span>
+                    </div>
+
+                    <div x-show="!loadingJobs && filteredJobs.length > 0" class="space-y-2 max-h-64 overflow-y-auto">
+                        <template x-for="job in filteredJobs" :key="job.id">
+                            <div @click="selectJob(job)" 
+                                 class="p-3 border border-[#134E7B]/30 rounded-lg cursor-pointer hover:border-[#ffd54e] hover:bg-[#ffd54e]/10 transition-colors">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <h4 class="font-medium text-[#0B2545] text-sm" x-text="job.title || job.job_title"></h4>
+                                        <p class="text-xs text-[#134E7B]" x-text="job.company"></p>
+                                    </div>
+                                    <span class="text-xs bg-[#0B2545]/10 text-[#0B2545] px-2 py-1 rounded" x-text="job.experience_level || 'Not specified'"></span>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+
+                    <div x-show="!loadingJobs && filteredJobs.length === 0" class="text-center py-8 bg-gray-50 rounded-lg">
+                        <svg class="mx-auto h-12 w-12 text-[#134E7B]/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m8 0V6a2 2 0 012 2v6M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m-8 0H2a2 2 0 00-2 2v6" />
+                        </svg>
+                        <p class="mt-2 text-sm text-[#0B2545]">No job descriptions found</p>
+                        <p class="text-xs text-gray-500 mt-1">Try a different search or load more jobs</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analysis Container (Checklist, Progress, and Results) -->
+            <div x-show="cvData && !uploadingCV" class="bg-white rounded-lg shadow-lg border border-gray-200 p-8">
+                <!-- Analysis Checklist (shown when no analysis result) -->
+                <div x-show="!analysisResult && !analyzing">
+                    <h2 class="text-xl font-bold text-gray-900 mb-6">Ready to Analyze?</h2>
+                    
+                    <!-- Checklist -->
+                    <div class="space-y-4 mb-8">
+                        <div class="flex items-center p-4 rounded-lg" 
+                             :class="cvData ? 'bg-green-50 border border-green-200' : 'bg-gray-50 border border-gray-200'">
+                            <div class="flex-shrink-0">
+                                <svg x-show="cvData" class="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                </svg>
+                                <svg x-show="!cvData" class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm font-medium" :class="cvData ? 'text-green-900' : 'text-gray-600'">
+                                    CV Uploaded and Parsed
+                                </p>
+                                <p x-show="cvData" class="text-xs text-green-700 mt-1">
+                                    <span x-text="cvData?.contact_info?.name || cvData?.contact_name || 'CV'"></span> ready for analysis
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center p-4 rounded-lg" 
+                             :class="selectedJob ? 'bg-green-50 border border-green-200' : 'bg-gray-50 border border-gray-200'">
+                            <div class="flex-shrink-0">
+                                <svg x-show="selectedJob" class="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                </svg>
+                                <svg x-show="!selectedJob" class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm font-medium" :class="selectedJob ? 'text-green-900' : 'text-gray-600'">
+                                    Job Description Selected
+                                </p>
+                                <p x-show="selectedJob" class="text-xs text-green-700 mt-1">
+                                    <span x-text="selectedJob?.title || selectedJob?.job_title"></span> at <span x-text="selectedJob?.company"></span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Analyze Button -->
+                    <div class="text-center">
+                        <button @click="startAnalysis()" 
+                                :disabled="!cvData || !selectedJob"
+                                class="px-8 py-3 bg-[#ffd54e] text-gray-900 font-medium rounded-lg hover:bg-[#ffca28] focus:outline-none focus:ring-2 focus:ring-[#ffd54e] focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[#ffd54e]">
+                            <span class="flex items-center">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                                </svg>
+                                Analyze CV
+                            </span>
+                        </button>
+                        <p x-show="!cvData || !selectedJob" class="text-xs text-gray-500 mt-2">
+                            Complete all requirements above to enable analysis
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Analysis Progress (horizontal layout) -->
+                <div x-show="analyzing" class="space-y-6">
+                    <h2 class="text-xl font-bold text-gray-900">Analyzing CV...</h2>
+                    
+                    <div class="bg-gray-50 rounded-lg p-6">
+                        <div class="flex items-center justify-between space-x-4">
+                            <div class="flex-1 text-center" :class="analysisStep >= 1 ? 'opacity-100' : 'opacity-40'">
+                                <div class="mx-auto w-12 h-12 rounded-full flex items-center justify-center mb-2"
+                                     :class="analysisStep >= 1 ? 'bg-blue-600' : 'bg-gray-300'">
+                                    <svg x-show="analysisStep > 1" class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                                    </svg>
+                                    <div x-show="analysisStep === 1" class="w-3 h-3 bg-white rounded-full animate-pulse"></div>
+                                    <span x-show="analysisStep < 1" class="text-white font-bold">1</span>
+                                </div>
+                                <p class="text-xs font-medium text-gray-700">Extracting Skills</p>
+                            </div>
+
+                            <div class="flex-1 text-center" :class="analysisStep >= 2 ? 'opacity-100' : 'opacity-40'">
+                                <div class="mx-auto w-12 h-12 rounded-full flex items-center justify-center mb-2"
+                                     :class="analysisStep >= 2 ? 'bg-blue-600' : 'bg-gray-300'">
+                                    <svg x-show="analysisStep > 2" class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                                    </svg>
+                                    <div x-show="analysisStep === 2" class="w-3 h-3 bg-white rounded-full animate-pulse"></div>
+                                    <span x-show="analysisStep < 2" class="text-white font-bold">2</span>
+                                </div>
+                                <p class="text-xs font-medium text-gray-700">Matching Experience</p>
+                            </div>
+
+                            <div class="flex-1 text-center" :class="analysisStep >= 3 ? 'opacity-100' : 'opacity-40'">
+                                <div class="mx-auto w-12 h-12 rounded-full flex items-center justify-center mb-2"
+                                     :class="analysisStep >= 3 ? 'bg-blue-600' : 'bg-gray-300'">
+                                    <svg x-show="analysisStep > 3" class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                                    </svg>
+                                    <div x-show="analysisStep === 3" class="w-3 h-3 bg-white rounded-full animate-pulse"></div>
+                                    <span x-show="analysisStep < 3" class="text-white font-bold">3</span>
+                                </div>
+                                <p class="text-xs font-medium text-gray-700">Evaluating Education</p>
+                            </div>
+
+                            <div class="flex-1 text-center" :class="analysisStep >= 4 ? 'opacity-100' : 'opacity-40'">
+                                <div class="mx-auto w-12 h-12 rounded-full flex items-center justify-center mb-2"
+                                     :class="analysisStep >= 4 ? 'bg-blue-600' : 'bg-gray-300'">
+                                    <svg x-show="analysisStep > 4" class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                                    </svg>
+                                    <div x-show="analysisStep === 4" class="w-3 h-3 bg-white rounded-full animate-pulse"></div>
+                                    <span x-show="analysisStep < 4" class="text-white font-bold">4</span>
+                                </div>
+                                <p class="text-xs font-medium text-gray-700">Generating Insights</p>
+                            </div>
+                        </div>
+
+                        <!-- Progress Bar -->
+                        <div class="mt-6 bg-gray-200 rounded-full h-2">
+                            <div class="bg-blue-600 h-2 rounded-full transition-all duration-500" 
+                                 :style="'width: ' + (analysisStep * 25) + '%'"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analysis Results Summary -->
+                <div x-show="analysisResult && !showDetailedResults">
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0">
+                                <svg class="h-8 w-8 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                            </div>
+                            <h2 class="ml-3 text-2xl font-bold text-gray-900">Analysis Complete!</h2>
+                        </div>
+                        <div class="flex space-x-3">
+                            <button @click="showDetailedResults = true" 
+                                    class="px-6 py-2.5 text-sm bg-[#ffd54e] text-gray-900 font-medium rounded-lg hover:bg-[#ffca28] transition-colors">
+                                View Detailed Results
+                            </button>
+                            <button @click="startNewAnalysis()" 
+                                    class="px-6 py-2.5 text-sm bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 transition-colors">
+                                Start New Analysis
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Score Overview -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="bg-gray-50 rounded-lg p-6 text-center">
+                            <div class="text-4xl font-bold mb-2"
+                                 :class="{
+                                    'text-green-600': analysisResult?.suitability_score >= 70,
+                                    'text-yellow-600': analysisResult?.suitability_score >= 50 && analysisResult?.suitability_score < 70,
+                                    'text-red-600': analysisResult?.suitability_score < 50
+                                 }">
+                                <span x-text="analysisResult?.suitability_score"></span>%
+                            </div>
+                            <p class="text-sm text-gray-600">Overall Match Score</p>
+                        </div>
+                        <div class="bg-gray-50 rounded-lg p-6 text-center">
+                            <div class="text-3xl font-bold text-green-600 mb-2">
+                                <span x-text="(analysisResult?.matching_skills || []).length"></span>
+                            </div>
+                            <p class="text-sm text-gray-600">Matching Skills</p>
+                        </div>
+                        <div class="bg-gray-50 rounded-lg p-6 text-center">
+                            <div class="text-3xl font-bold text-red-600 mb-2">
+                                <span x-text="(analysisResult?.missing_skills || []).length"></span>
+                            </div>
+                            <p class="text-sm text-gray-600">Skills to Develop</p>
+                        </div>
+                    </div>
+
+                    <!-- Category Scores -->
+                    <div class="mt-6 grid grid-cols-3 gap-4">
+                        <div class="bg-blue-50 rounded-lg p-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-sm font-medium text-blue-900">Technical Skills</span>
+                                <span class="text-lg font-bold text-blue-600">
+                                    <span x-text="analysisResult?.technical_score || 0"></span>%
+                                </span>
+                            </div>
+                            <div class="w-full bg-blue-100 rounded-full h-2">
+                                <div class="bg-blue-600 h-2 rounded-full transition-all duration-300" 
+                                     :style="'width: ' + (analysisResult?.technical_score || 0) + '%'"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-green-50 rounded-lg p-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-sm font-medium text-green-900">Experience</span>
+                                <span class="text-lg font-bold text-green-600">
+                                    <span x-text="analysisResult?.experience_score || 0"></span>%
+                                </span>
+                            </div>
+                            <div class="w-full bg-green-100 rounded-full h-2">
+                                <div class="bg-green-600 h-2 rounded-full transition-all duration-300" 
+                                     :style="'width: ' + (analysisResult?.experience_score || 0) + '%'"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-purple-50 rounded-lg p-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-sm font-medium text-purple-900">Education</span>
+                                <span class="text-lg font-bold text-purple-600">
+                                    <span x-text="analysisResult?.education_score || 0"></span>%
+                                </span>
+                            </div>
+                            <div class="w-full bg-purple-100 rounded-full h-2">
+                                <div class="bg-purple-600 h-2 rounded-full transition-all duration-300" 
+                                     :style="'width: ' + (analysisResult?.education_score || 0) + '%'"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Insights -->
+                    <div class="mt-6 bg-gray-50 rounded-lg p-4">
+                        <h3 class="text-sm font-semibold text-gray-700 mb-2">Quick Insights</h3>
+                        <p class="text-sm text-gray-600" x-text="analysisResult?.scoring_rationale || 
+                            `${cvData?.contact_info?.name || 'Candidate'} is a ${
+                                analysisResult?.suitability_score >= 70 ? 'strong' :
+                                analysisResult?.suitability_score >= 50 ? 'moderate' : 'developing'
+                            } match for the ${selectedJob?.title || selectedJob?.job_title || 'position'} at ${selectedJob?.company || 'the company'}.`">
+                        </p>
+                        
+                        <!-- Recommendations Preview -->
+                        <div x-show="(analysisResult?.recommendations || []).length > 0" class="mt-3">
+                            <p class="text-xs font-medium text-gray-700 mb-1">Key Recommendations:</p>
+                            <ul class="list-disc list-inside text-xs text-gray-600 space-y-1">
+                                <template x-for="(rec, index) in (analysisResult?.recommendations || []).slice(0, 2)" :key="index">
+                                    <li x-text="rec"></li>
+                                </template>
+                                <li x-show="(analysisResult?.recommendations || []).length > 2" class="text-[#ffb300]">
+                                    View <span x-text="(analysisResult?.recommendations || []).length - 2"></span> more recommendations in detailed results
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Red Flags Alert (if any) -->
+                    <div x-show="(analysisResult?.red_flags || []).length > 0" 
+                         class="mt-4 bg-red-50 border border-red-200 rounded-lg p-4">
+                        <div class="flex items-start">
+                            <svg class="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                            </svg>
+                            <div class="ml-3">
+                                <h4 class="text-sm font-medium text-red-900">Attention Required</h4>
+                                <p class="text-xs text-red-700 mt-1">
+                                    <span x-text="(analysisResult?.red_flags || []).length"></span> potential concern<span x-text="(analysisResult?.red_flags || []).length !== 1 ? 's' : ''"></span> identified.
+                                    View detailed results for more information.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detailed Analysis Results (in modal) -->
+                <div x-show="showDetailedResults" x-cloak>
+                    <div x-html="analysisResultsModal"></div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Right Column: Recent Activity Dashboard -->
+        <div class="lg:col-span-1">
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                <!-- Header -->
+                <div class="bg-gradient-to-r from-[#0B2545] to-[#134E7B] px-6 py-4">
+                    <h2 class="text-lg font-semibold text-white flex items-center">
+                        <svg class="w-5 h-5 mr-2 text-[#ffd54e]" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z" />
+                        </svg>
+                        Activity Dashboard
+                    </h2>
+                    <p class="text-xs text-gray-200 mt-1">Quick access to recent activities and top jobs</p>
+                </div>
+                
+                <div class="divide-y divide-gray-200">
+                    <!-- Recent CVs Section -->
+                    <div class="p-6 bg-gradient-to-br from-white to-[#ffd54e]/5">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <h3 class="text-base font-semibold text-[#0B2545] flex items-center">
+                                    <svg class="w-5 h-5 mr-2 text-[#ffd54e]" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                    </svg>
+                                    Recent CVs
+                                </h3>
+                                <p class="text-xs text-gray-500 mt-1">Previously uploaded resumes</p>
+                            </div>
+                            <button @click="showAllRecentCVs()" 
+                                    class="text-xs font-medium text-[#134E7B] hover:text-[#0B2545] transition-colors">
+                                View All
+                            </button>
+                        </div>
+                        
+                        <div x-show="recentUploads.length > 0" class="space-y-2">
+                            <template x-for="upload in recentUploads.slice(0, 3)" :key="upload.id">
+                                <div class="group relative bg-gray-50 hover:bg-gray-100 rounded-lg p-3 transition-all duration-200">
+                                    <div class="flex items-start justify-between">
+                                        <div class="flex-1 min-w-0">
+                                            <p class="text-sm font-medium text-gray-900 truncate group-hover:text-blue-600 transition-colors" 
+                                               x-text="upload.filename"></p>
+                                            <p class="text-xs text-gray-500 mt-1">
+                                                <span x-text="upload.contact_name || 'No name'"></span> • 
+                                                <span x-text="formatDate(upload.upload_date)"></span>
+                                            </p>
+                                        </div>
+                                        <button @click="selectRecentUpload(upload)" 
+                                                class="ml-2 px-3 py-1 text-xs bg-[#ffd54e] text-gray-900 font-medium rounded hover:bg-[#ffca28] transition-colors opacity-0 group-hover:opacity-100">
+                                            Load
+                                        </button>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                        
+                        <div x-show="recentUploads.length === 0" class="text-center py-8">
+                            <svg class="mx-auto h-10 w-10 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                            </svg>
+                            <p class="mt-2 text-sm text-gray-500">No recent CVs</p>
+                            <p class="text-xs text-gray-400 mt-1">Upload a CV to get started</p>
+                        </div>
+                    </div>
+
+                    <!-- Recent Analyses Section -->
+                    <div class="p-6 bg-gradient-to-br from-white to-[#134E7B]/5">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <h3 class="text-base font-semibold text-[#0B2545] flex items-center">
+                                    <svg class="w-5 h-5 mr-2 text-[#ffd54e]" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                    </svg>
+                                    Recent Analyses
+                                </h3>
+                                <p class="text-xs text-gray-500 mt-1">Latest CV-job match results</p>
+                            </div>
+                            <button @click="showAllRecentAnalyses()" 
+                                    class="text-xs font-medium text-[#134E7B] hover:text-[#0B2545] transition-colors">
+                                View All
+                            </button>
+                        </div>
+                        
+                        <div x-show="recentAnalyses.length > 0" class="space-y-2">
+                            <template x-for="analysis in recentAnalyses.slice(0, 3)" :key="analysis.id">
+                                <div class="group relative bg-gray-50 hover:bg-gray-100 rounded-lg p-3 transition-all duration-200">
+                                    <div class="flex items-start justify-between">
+                                        <div class="flex-1 min-w-0">
+                                            <div class="flex items-center justify-between">
+                                                <p class="text-sm font-medium text-gray-900 truncate group-hover:text-blue-600 transition-colors flex-1" 
+                                                   x-text="analysis.job_title"></p>
+                                                <div class="ml-2 flex items-center">
+                                                    <span class="text-sm font-bold"
+                                                          :class="{
+                                                             'text-green-600': analysis.score >= 70,
+                                                             'text-yellow-600': analysis.score >= 50 && analysis.score < 70,
+                                                             'text-red-600': analysis.score < 50
+                                                          }"
+                                                          x-text="analysis.score + '%'"></span>
+                                                </div>
+                                            </div>
+                                            <p class="text-xs text-gray-500 mt-1">
+                                                <span x-text="analysis.cv_name"></span> • 
+                                                <span x-text="formatDate(analysis.analysis_date)"></span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <button @click="viewPreviousAnalysis(analysis.id)" 
+                                            class="mt-2 w-full px-3 py-1 text-xs bg-[#ffd54e] text-gray-900 font-medium rounded hover:bg-[#ffca28] transition-colors opacity-0 group-hover:opacity-100">
+                                        View Analysis
+                                    </button>
+                                </div>
+                            </template>
+                        </div>
+                        
+                        <div x-show="recentAnalyses.length === 0" class="text-center py-8">
+                            <svg class="mx-auto h-10 w-10 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2v-14a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                            </svg>
+                            <p class="mt-2 text-sm text-gray-500">No analyses yet</p>
+                            <p class="text-xs text-gray-400 mt-1">Complete an analysis to see results here</p>
+                        </div>
+                    </div>
+
+                    <!-- Top Jobs Section -->
+                    <div class="p-6 bg-gradient-to-br from-white to-[#ffd54e]/5">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <h3 class="text-base font-semibold text-[#0B2545] flex items-center">
+                                    <svg class="w-5 h-5 mr-2 text-[#ffd54e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m8 0h6a2 2 0 012 2v6M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m-8 0H2a2 2 0 00-2 2v6" />
+                                    </svg>
+                                    Top Jobs
+                                </h3>
+                                <p class="text-xs text-gray-500 mt-1">Most recent job postings</p>
+                            </div>
+                            <button @click="navigateTo('jobs')" 
+                                    class="text-xs font-medium text-[#134E7B] hover:text-[#0B2545] transition-colors">
+                                Manage Jobs
+                            </button>
+                        </div>
+                        
+                        <div x-show="topJobs.length > 0" class="space-y-2">
+                            <template x-for="(job, index) in topJobs.slice(0, 5)" :key="job.id">
+                                <div class="group relative bg-gray-50 hover:bg-[#ffd54e]/10 rounded-lg p-3 transition-all duration-200 cursor-pointer"
+                                     @click="!cvData ? showNotification('Please upload a CV first', 'warning') : selectJob(job)">
+                                    <div class="flex items-start space-x-3">
+                                        <span class="flex-shrink-0 w-6 h-6 bg-[#ffd54e] text-[#0B2545] rounded-full flex items-center justify-center text-xs font-medium"
+                                              x-text="index + 1"></span>
+                                        <div class="flex-1 min-w-0">
+                                            <p class="text-sm font-medium text-[#0B2545] truncate group-hover:text-[#134E7B] transition-colors" 
+                                               x-text="job.title"></p>
+                                            <p class="text-xs text-[#134E7B]" x-text="job.company"></p>
+                                            <div class="mt-1 flex items-center text-xs text-gray-400">
+                                                <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                </svg>
+                                                <span x-text="job.location || 'Remote'"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                        
+                        <div x-show="topJobs.length === 0" class="text-center py-8">
+                            <svg class="mx-auto h-10 w-10 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
+                            <p class="mt-2 text-sm text-gray-500">No jobs available</p>
+                            <p class="text-xs text-gray-400 mt-1">Add job descriptions to get started</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer with help text -->
+                <div class="bg-gradient-to-r from-[#0B2545] to-[#134E7B] px-6 py-3">
+                    <p class="text-xs text-gray-200 text-center flex items-center justify-center">
+                        <svg class="w-3 h-3 mr-1 text-[#ffd54e]" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                        </svg>
+                        Click on items to load or view details
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include Analysis Results Modal -->
+    <div x-show="showDetailedResults" x-cloak>
+        <div x-html="analysisResultsModal"></div>
+    </div>
+    
+    <!-- Include Recent CVs Modal -->
+    <div x-show="showRecentCVsModal" x-cloak>
+        <div x-html="recentCVsModal"></div>
+    </div>
+    
+    <!-- Include Recent Analyses Modal -->
+    <div x-show="showRecentAnalysesModal" x-cloak>
+        <div x-html="recentAnalysesModal"></div>
+    </div>
+</div>

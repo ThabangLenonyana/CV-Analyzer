@@ -1,0 +1,112 @@
+<div class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <!-- Background overlay -->
+        <div @click="showRecentCVsModal = false" 
+             class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" 
+             aria-hidden="true"></div>
+
+        <!-- Modal panel -->
+        <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full">
+            <div class="bg-white">
+                <!-- Header -->
+                <div class="bg-gradient-to-r from-[#0B2545] to-[#134E7B] px-6 py-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-xl font-bold text-white">Recent CV Uploads</h3>
+                            <p class="text-sm text-gray-200 mt-1">Select a CV to load for analysis</p>
+                        </div>
+                        <button @click="showRecentCVsModal = false" 
+                                class="text-white hover:text-gray-200 transition-colors">
+                            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Content -->
+                <div class="px-6 py-4">
+                    <!-- Search bar -->
+                    <div class="mb-6">
+                        <div class="relative">
+                            <input type="text" 
+                                   x-model="recentCVsSearch"
+                                   @input="filterRecentCVs()"
+                                   placeholder="Search by filename or candidate name..."
+                                   class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            <svg class="absolute left-3 top-2.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- CVs List -->
+                    <div class="max-h-96 overflow-y-auto">
+                        <div x-show="loadingAllCVs" class="text-center py-8">
+                            <div class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-blue-600 border-r-transparent"></div>
+                            <p class="mt-2 text-gray-600">Loading CVs...</p>
+                        </div>
+
+                        <div x-show="!loadingAllCVs && filteredRecentCVs.length > 0" class="space-y-3">
+                            <template x-for="cv in filteredRecentCVs" :key="cv.id">
+                                <div class="bg-gray-50 hover:bg-gray-100 rounded-lg p-4 transition-colors cursor-pointer group"
+                                     @click="selectRecentUpload(cv); showRecentCVsModal = false">
+                                    <div class="flex items-start justify-between">
+                                        <div class="flex-1">
+                                            <h4 class="font-medium text-gray-900 group-hover:text-blue-600 transition-colors" 
+                                                x-text="cv.filename"></h4>
+                                            <div class="mt-2 grid grid-cols-2 gap-4 text-sm">
+                                                <div>
+                                                    <span class="text-gray-500">Name:</span>
+                                                    <span class="ml-1 text-gray-700" x-text="cv.contact_name || 'Not available'"></span>
+                                                </div>
+                                                <div>
+                                                    <span class="text-gray-500">Email:</span>
+                                                    <span class="ml-1 text-gray-700" x-text="cv.contact_email || 'Not available'"></span>
+                                                </div>
+                                                <div>
+                                                    <span class="text-gray-500">Uploaded:</span>
+                                                    <span class="ml-1 text-gray-700" x-text="formatDate(cv.upload_date)"></span>
+                                                </div>
+                                                <div x-show="cv.file_size">
+                                                    <span class="text-gray-500">Size:</span>
+                                                    <span class="ml-1 text-gray-700" x-text="formatFileSize(cv.file_size)"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="ml-4 flex-shrink-0">
+                                            <div class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-medium">
+                                                Select
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+
+                        <div x-show="!loadingAllCVs && filteredRecentCVs.length === 0" class="text-center py-12">
+                            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            <p class="mt-2 text-gray-900">No CVs found</p>
+                            <p class="text-sm text-gray-500 mt-1">Try adjusting your search or upload a new CV</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="bg-gray-50 px-6 py-4 border-t border-gray-200">
+                    <div class="flex justify-between items-center">
+                        <p class="text-sm text-gray-500">
+                            Showing <span x-text="filteredRecentCVs.length"></span> of <span x-text="allRecentCVs.length"></span> CVs
+                        </p>
+                        <button @click="showRecentCVsModal = false" 
+                                class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

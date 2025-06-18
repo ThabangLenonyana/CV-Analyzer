@@ -25,7 +25,10 @@ Thumbs.db
 
 # Project specific
 uploads/
+output/
 *.log
 .pytest_cache/
 .coverage
 htmlcov/
+frontend/
+dumps/

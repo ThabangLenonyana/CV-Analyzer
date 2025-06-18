@@ -79,3 +79,35 @@ Analyze the following CV against the provided Job Description. Provide your resp
 - **Error Handling**:
   - The UI must show an error if the CV file format is unsupported.
   - The UI must show a user-friendly error if the LLM API call fails (e.g., due to a network issue, invalid API key, or the service being down).
+
+## Loading Job Descriptions
+
+To load job descriptions from JSON files into the database:
+
+```bash
+# Load from default directory (output/jds)
+python scripts/load_job_descriptions.py
+
+# Load from custom directory
+python scripts/load_job_descriptions.py /path/to/json/files
+```
+
+The script will:
+- Read all JSON files from the specified directory
+- Validate the job description format
+- Skip duplicates (based on job title and company)
+- Load valid job descriptions into the database
+
+## Usage
+
+1. First, load some job descriptions:
+   ```bash
+   python scripts/load_job_descriptions.py output/jds
+   ```
+
+2. Start the application:
+   ```bash
+   python -m uvicorn app.main:app --reload
+   ```
+
+3. Upload a CV and select from the loaded job descriptions for analysis

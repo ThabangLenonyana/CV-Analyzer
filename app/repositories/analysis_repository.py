@@ -3,260 +3,263 @@ from datetime import datetime, timedelta
 import logging
 
 from app.repositories.base_repository import BaseRepository
-from app.models.database import AnalysisResult, AnalysisHistory
+from app.models.database import Analysis, CVRecord, JobDescription, FileUpload
 from app.models.schemas import AnalysisResponse
+from sqlalchemy import func
+from sqlalchemy.orm import joinedload
 
 logger = logging.getLogger(__name__)
 
-class AnalysisRepository(BaseRepository[AnalysisResult]):
-    """Repository for analysis result database operations"""
+class AnalysisRepository(BaseRepository[Analysis]):
+    """Simplified analysis repository"""
     
     def __init__(self):
-        super().__init__(AnalysisResult)
+        super().__init__(Analysis)
     
     def save_analysis_result(self, cv_record_id: int, job_description_id: int,
-                           analysis_response: AnalysisResponse,
-                           analysis_duration: float = None) -> AnalysisResult:
-        """Save an analysis result"""
-        analysis_dict = analysis_response.dict()
-        
-        # Extract detailed analysis data
-        detailed_analysis = analysis_dict.get("detailed_analysis")
-        skill_matches = []
-        experience_matches = []
-        education_matches = []
-        
-        if detailed_analysis:
-            skill_matches = [match for match in detailed_analysis.get("skill_matches", [])]
-            experience_matches = [match for match in detailed_analysis.get("experience_matches", [])]
-            education_matches = [match for match in detailed_analysis.get("education_matches", [])]
-        
-        analysis_record = self.create(
-            cv_record_id=cv_record_id,
-            job_description_id=job_description_id,
-            overall_suitability_score=analysis_response.suitability_score,
-            technical_score=analysis_response.technical_score,
-            experience_score=analysis_response.experience_score,
-            education_score=analysis_response.education_score,
-            scoring_rationale=analysis_response.scoring_rationale,
-            matching_skills=analysis_response.matching_skills,
-            missing_skills=analysis_response.missing_skills,
-            recommendations=analysis_response.recommendations,
-            red_flags=analysis_response.red_flags,
-            skill_match_details=skill_matches,
-            experience_match_details=experience_matches,
-            education_match_details=education_matches,
-            full_analysis_data=analysis_dict,
-            analysis_duration_seconds=analysis_duration,
-            analyzer_version="1.0"
-        )
-        
-        logger.info(f"Saved analysis result with ID: {analysis_record.id}")
-        return analysis_record
+                       analysis_response: AnalysisResponse,
+                       analysis_duration: float = None) -> Dict[str, Any]:
+        """Save analysis result and return essential data immediately"""
+        analysis_data = analysis_response.dict()
+        if analysis_duration:
+            analysis_data['duration_seconds'] = analysis_duration
+    
+        try:
+            with self.get_db() as db:
+                analysis = Analysis(
+                    cv_record_id=cv_record_id,
+                    job_description_id=job_description_id,
+                    suitability_score=analysis_response.suitability_score,
+                    analysis_data=analysis_data,
+                    analysis_date=datetime.utcnow()
+                )
+                
+                db.add(analysis)
+                db.flush()  # Flush to get the ID without committing
+                
+                # Get all needed data while session is active
+                analysis_id = analysis.id
+                analysis_date = analysis.analysis_date
+                
+                db.commit()  # Now commit the transaction
+                
+                # Return a dictionary with the essential data
+                return {
+                    "id": analysis_id,
+                    "analysis_date": analysis_date,
+                    "cv_record_id": cv_record_id,
+                    "job_description_id": job_description_id,
+                    "suitability_score": analysis_response.suitability_score
+                }
+                
+        except Exception as e:
+            logger.error(f"Error saving analysis result: {str(e)}")
+            raise
     
     def get_analysis_with_details(self, analysis_id: int) -> Optional[Dict[str, Any]]:
-        """Get analysis result with CV and job description details"""
-        with self.get_session() as session:
-            from app.models.database import CVRecord, JobDescriptionRecord
-            
-            result = session.query(
-                AnalysisResult, CVRecord, JobDescriptionRecord
+        """Get full analysis details"""
+        with self.get_db() as db:
+            result = db.query(
+                Analysis, CVRecord, JobDescription, FileUpload
             ).join(
-                CVRecord, AnalysisResult.cv_record_id == CVRecord.id
+                CVRecord, Analysis.cv_record_id == CVRecord.id
             ).join(
-                JobDescriptionRecord, AnalysisResult.job_description_id == JobDescriptionRecord.id
-            ).filter(AnalysisResult.id == analysis_id).first()
+                JobDescription, Analysis.job_description_id == JobDescription.id
+            ).join(
+                FileUpload, CVRecord.file_upload_id == FileUpload.id
+            ).filter(Analysis.id == analysis_id).first()
             
-            if result:
-                analysis, cv_record, job_record = result
-                analysis_data = analysis.to_dict()
-                analysis_data["cv_details"] = cv_record.to_dict()
-                analysis_data["job_details"] = job_record.to_dict()
-                return analysis_data
+            if not result:
+                return None
             
-            return None
+            analysis, cv, job, file = result
+            data = self._format_analysis(analysis)
+            data.update({
+                "cv_details": {
+                    "id": cv.id,
+                    "name": cv.contact_name,
+                    "email": cv.contact_email,
+                    "filename": file.original_filename,
+                    "parsed_data": cv.parsed_data
+                },
+                "job_details": {
+                    "id": job.id,
+                    "title": job.job_title,
+                    "company": job.company,
+                    "job_data": job.job_data
+                }
+            })
+            
+            return data
     
     def get_recent_analyses(self, limit: int = 20) -> List[Dict[str, Any]]:
-        """Get recent analysis results with basic details"""
-        with self.get_session() as session:
-            from app.models.database import CVRecord, JobDescriptionRecord, FileUpload
-            
-            results = session.query(
-                AnalysisResult, CVRecord, JobDescriptionRecord, FileUpload
-            ).join(
-                CVRecord, AnalysisResult.cv_record_id == CVRecord.id
-            ).join(
-                JobDescriptionRecord, AnalysisResult.job_description_id == JobDescriptionRecord.id
-            ).join(
-                FileUpload, CVRecord.file_upload_id == FileUpload.id
-            ).order_by(
-                AnalysisResult.created_at.desc()
-            ).limit(limit).all()
-            
-            analysis_list = []
-            for analysis, cv_record, job_record, file_upload in results:
-                analysis_data = analysis.to_dict()
-                analysis_data.update({
-                    "cv_name": cv_record.contact_info.get("name") if cv_record.contact_info else "Unknown",
-                    "cv_filename": file_upload.original_filename,
-                    "job_title": job_record.title,
-                    "job_company": job_record.company
-                })
-                analysis_list.append(analysis_data)
-            
-            return analysis_list
+        """Get recent analyses with full details"""
+        try:
+            with self.get_db() as db:  # Add context manager
+                analyses = (
+                    db.query(Analysis)
+                    .options(
+                        joinedload(Analysis.cv_record).joinedload(CVRecord.file_upload),
+                        joinedload(Analysis.job_description)
+                    )
+                    .order_by(Analysis.analysis_date.desc())
+                    .limit(limit)
+                    .all()
+                )
+                
+                logger.info(f"Found {len(analyses)} analyses in database")
+                
+                # Convert to dict with related data
+                results = []
+                for analysis in analyses:
+                    try:
+                        # Create the result dictionary
+                        result = {
+                            'id': analysis.id,
+                            'cv_record_id': analysis.cv_record_id,
+                            'job_description_id': analysis.job_description_id,
+                            'suitability_score': analysis.suitability_score,
+                            'analysis_date': analysis.analysis_date.isoformat() if analysis.analysis_date else None,
+                            'analysis_data': analysis.analysis_data
+                        }
+                        
+                        # Add CV record data if available
+                        if analysis.cv_record:
+                            result['cv_record'] = {
+                                'id': analysis.cv_record.id,
+                                'contact_name': analysis.cv_record.contact_name,
+                                'contact_email': analysis.cv_record.contact_email,
+                                'parsed_data': analysis.cv_record.parsed_data
+                            }
+                            
+                            # Add file upload data if available
+                            if analysis.cv_record.file_upload:
+                                result['cv_record']['file_upload'] = {
+                                    'id': analysis.cv_record.file_upload.id,
+                                    'original_filename': analysis.cv_record.file_upload.original_filename,
+                                    'filename': analysis.cv_record.file_upload.filename,
+                                    'upload_date': analysis.cv_record.file_upload.upload_date.isoformat() if analysis.cv_record.file_upload.upload_date else None
+                            }
+                        
+                        # Add job description data if available
+                        if analysis.job_description:
+                            result['job_description'] = {
+                                'id': analysis.job_description.id,
+                                'job_title': analysis.job_description.job_title,
+                                'company': analysis.job_description.company,
+                                'job_data': analysis.job_description.job_data
+                            }
+                        
+                        results.append(result)
+                        logger.debug(f"Processed analysis {analysis.id}")
+                        
+                    except Exception as e:
+                        logger.error(f"Error processing analysis {analysis.id}: {str(e)}")
+                        continue
+                
+                logger.info(f"Returning {len(results)} formatted analyses")
+                return results
+                
+        except Exception as e:
+            logger.error(f"Error getting recent analyses: {str(e)}", exc_info=True)
+            return []
     
-    def get_analyses_by_cv(self, cv_record_id: int) -> List[Dict[str, Any]]:
-        """Get all analyses for a specific CV"""
-        with self.get_session() as session:
-            from app.models.database import JobDescriptionRecord
-            
-            results = session.query(AnalysisResult, JobDescriptionRecord).join(
-                JobDescriptionRecord, AnalysisResult.job_description_id == JobDescriptionRecord.id
+    def get_analyses_by_cv(self, cv_id: int) -> List[Dict[str, Any]]:
+        """Get all analyses for a CV"""
+        with self.get_db() as db:
+            results = db.query(Analysis, JobDescription).join(
+                JobDescription, Analysis.job_description_id == JobDescription.id
             ).filter(
-                AnalysisResult.cv_record_id == cv_record_id
-            ).order_by(AnalysisResult.created_at.desc()).all()
+                Analysis.cv_record_id == cv_id
+            ).order_by(Analysis.analysis_date.desc()).all()
             
             analyses = []
-            for analysis, job_record in results:
-                analysis_data = analysis.to_dict()
-                analysis_data["job_details"] = job_record.to_dict()
-                analyses.append(analysis_data)
+            for analysis, job in results:
+                data = self._format_analysis(analysis)
+                data.update({
+                    "job_title": job.job_title,
+                    "company": job.company
+                })
+                analyses.append(data)
             
             return analyses
     
-    def get_analyses_by_job(self, job_description_id: int) -> List[Dict[str, Any]]:
-        """Get all analyses for a specific job description"""
-        with self.get_session() as session:
-            from app.models.database import CVRecord, FileUpload
-            
-            results = session.query(AnalysisResult, CVRecord, FileUpload).join(
-                CVRecord, AnalysisResult.cv_record_id == CVRecord.id
+    def get_analyses_by_job(self, job_id: int) -> List[Dict[str, Any]]:
+        """Get all analyses for a job"""
+        with self.get_db() as db:
+            results = db.query(Analysis, CVRecord, FileUpload).join(
+                CVRecord, Analysis.cv_record_id == CVRecord.id
             ).join(
                 FileUpload, CVRecord.file_upload_id == FileUpload.id
             ).filter(
-                AnalysisResult.job_description_id == job_description_id
-            ).order_by(AnalysisResult.overall_suitability_score.desc()).all()
+                Analysis.job_description_id == job_id
+            ).order_by(Analysis.suitability_score.desc()).all()
             
             analyses = []
-            for analysis, cv_record, file_upload in results:
-                analysis_data = analysis.to_dict()
-                analysis_data.update({
-                    "cv_name": cv_record.contact_info.get("name") if cv_record.contact_info else "Unknown",
-                    "cv_filename": file_upload.original_filename
+            for analysis, cv, file in results:
+                data = self._format_analysis(analysis)
+                data.update({
+                    "cv_name": cv.contact_name,
+                    "cv_filename": file.original_filename
                 })
-                analyses.append(analysis_data)
+                analyses.append(data)
             
             return analyses
     
-    def get_top_matches_for_job(self, job_description_id: int, limit: int = 10) -> List[Dict[str, Any]]:
-        """Get top matching CVs for a job description"""
-        analyses = self.get_analyses_by_job(job_description_id)
-        return sorted(analyses, key=lambda x: x["overall_suitability_score"], reverse=True)[:limit]
+    def get_top_matches_for_job(self, job_id: int, limit: int = 10) -> List[Dict[str, Any]]:
+        """Get top CV matches for a job"""
+        return self.get_analyses_by_job(job_id)[:limit]
     
     def get_analysis_statistics(self) -> Dict[str, Any]:
-        """Get overall analysis statistics"""
-        with self.get_session() as session:
-            total_analyses = session.query(AnalysisResult).count()
+        """Get basic statistics"""
+        with self.get_db() as db:
+            total_analyses = db.query(func.count(Analysis.id)).scalar()
             
-            # Average scores
-            avg_scores = session.query(
-                session.query(AnalysisResult.overall_suitability_score).subquery().c.overall_suitability_score.label('avg_overall'),
-                session.query(AnalysisResult.technical_score).subquery().c.technical_score.label('avg_technical'),
-                session.query(AnalysisResult.experience_score).subquery().c.experience_score.label('avg_experience'),
-                session.query(AnalysisResult.education_score).subquery().c.education_score.label('avg_education')
-            ).first()
+            # Average score
+            avg_score = db.query(func.avg(Analysis.suitability_score)).scalar() or 0
             
-            # Recent activity (last 30 days)
-            thirty_days_ago = datetime.utcnow() - timedelta(days=30)
-            recent_analyses = session.query(AnalysisResult).filter(
-                AnalysisResult.created_at >= thirty_days_ago
-            ).count()
+            # Recent activity (last 7 days)
+            week_ago = datetime.utcnow() - timedelta(days=7)
+            recent_count = db.query(func.count(Analysis.id)).filter(
+                Analysis.analysis_date >= week_ago
+            ).scalar()
+            
+            # Count by score range
+            excellent = db.query(func.count(Analysis.id)).filter(
+                Analysis.suitability_score >= 80
+            ).scalar()
+            good = db.query(func.count(Analysis.id)).filter(
+                Analysis.suitability_score.between(60, 79)
+            ).scalar()
+            fair = db.query(func.count(Analysis.id)).filter(
+                Analysis.suitability_score.between(40, 59)
+            ).scalar()
+            poor = db.query(func.count(Analysis.id)).filter(
+                Analysis.suitability_score < 40
+            ).scalar()
             
             return {
                 "total_analyses": total_analyses,
-                "recent_analyses_30_days": recent_analyses,
-                "average_scores": {
-                    "overall": avg_scores[0] if avg_scores else 0,
-                    "technical": avg_scores[1] if avg_scores else 0,
-                    "experience": avg_scores[2] if avg_scores else 0,
-                    "education": avg_scores[3] if avg_scores else 0
+                "average_score": round(avg_score, 2),
+                "recent_analyses": recent_count,
+                "score_distribution": {
+                    "excellent": excellent,
+                    "good": good,
+                    "fair": fair,
+                    "poor": poor
                 }
             }
+    
+    def _format_analysis(self, analysis: Analysis) -> Dict[str, Any]:
+        """Format analysis for API response"""
+        return {
+            "id": analysis.id,
+            "cv_id": analysis.cv_record_id,
+            "job_id": analysis.job_description_id,
+            "suitability_score": analysis.suitability_score,
+            "analysis": analysis.analysis_data,
+            "analysis_date": analysis.analysis_date,
+            "created_at": analysis.analysis_date  # For compatibility
+        }
 
-class AnalysisHistoryRepository(BaseRepository[AnalysisHistory]):
-    """Repository for analysis history tracking"""
-    
-    def __init__(self):
-        super().__init__(AnalysisHistory)
-    
-    def track_view(self, analysis_result_id: int, view_type: str = "full",
-                   user_agent: str = None, ip_address: str = None) -> AnalysisHistory:
-        """Track when an analysis is viewed"""
-        history_record = self.create(
-            analysis_result_id=analysis_result_id,
-            viewed_date=datetime.utcnow(),
-            view_type=view_type,
-            user_agent=user_agent,
-            ip_address=ip_address,
-            action_type="viewed"
-        )
-        
-        return history_record
-    
-    def add_user_feedback(self, analysis_result_id: int, rating: int,
-                         comment: str = None) -> AnalysisHistory:
-        """Add user feedback for an analysis"""
-        history_record = self.create(
-            analysis_result_id=analysis_result_id,
-            viewed_date=datetime.utcnow(),
-            action_type="feedback",
-            user_feedback_rating=rating,
-            user_feedback_comment=comment,
-            feedback_date=datetime.utcnow()
-        )
-        
-        return history_record
-    
-    def track_action(self, analysis_result_id: int, action_type: str,
-                    action_details: Dict[str, Any] = None) -> AnalysisHistory:
-        """Track a specific action on an analysis"""
-        history_record = self.create(
-            analysis_result_id=analysis_result_id,
-            viewed_date=datetime.utcnow(),
-            action_type=action_type,
-            action_details=action_details or {}
-        )
-        
-        return history_record
-    
-    def get_analysis_history(self, analysis_result_id: int) -> List[Dict[str, Any]]:
-        """Get all history entries for an analysis"""
-        with self.get_session() as session:
-            results = session.query(AnalysisHistory).filter(
-                AnalysisHistory.analysis_result_id == analysis_result_id
-            ).order_by(AnalysisHistory.created_at.desc()).all()
-            
-            return [entry.to_dict() for entry in results]
-    
-    def get_user_feedback_summary(self, analysis_result_id: int) -> Dict[str, Any]:
-        """Get summary of user feedback for an analysis"""
-        with self.get_session() as session:
-            feedback_entries = session.query(AnalysisHistory).filter(
-                (AnalysisHistory.analysis_result_id == analysis_result_id) &
-                (AnalysisHistory.action_type == "feedback") &
-                (AnalysisHistory.user_feedback_rating.isnot(None))
-            ).all()
-            
-            if not feedback_entries:
-                return {"total_feedback": 0, "average_rating": 0, "comments": []}
-            
-            ratings = [entry.user_feedback_rating for entry in feedback_entries]
-            comments = [entry.user_feedback_comment for entry in feedback_entries if entry.user_feedback_comment]
-            
-            return {
-                "total_feedback": len(feedback_entries),
-                "average_rating": sum(ratings) / len(ratings),
-                "ratings_distribution": {i: ratings.count(i) for i in range(1, 6)},
-                "comments": comments
-            }
+# Remove AnalysisHistoryRepository since we don't have that table

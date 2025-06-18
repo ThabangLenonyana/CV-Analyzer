@@ -9,104 +9,169 @@ from app.models.schemas import StructuredCV
 logger = logging.getLogger(__name__)
 
 class CVRepository(BaseRepository[CVRecord]):
-    """Repository for CV database operations"""
+    """Simplified CV repository"""
     
     def __init__(self):
         super().__init__(CVRecord)
     
-    def save_cv(self, file_upload_id: int, structured_cv: StructuredCV, raw_parsed_json: Dict[str, Any]) -> CVRecord:
-        """Save parsed CV data with raw JSON"""
-        cv_dict = structured_cv.dict()
+    def save_cv(self, file_upload_id: int, structured_cv: StructuredCV,
+                raw_parsed_json: Dict[str, Any]) -> CVRecord:
+        """Save parsed CV data"""
+        contact_info = structured_cv.contact_info
         
-        cv_record = self.create(
+        return self.create(
             file_upload_id=file_upload_id,
-            contact_info=cv_dict.get("contact_info"),
-            summary=cv_dict.get("summary"),
-            skills=cv_dict.get("skills"),
-            technical_skills=cv_dict.get("technical_skills"),
-            experiences=cv_dict.get("experiences"),
-            education=cv_dict.get("education"),
-            projects=cv_dict.get("projects"),
-            certifications=cv_dict.get("certifications"),
-            languages=cv_dict.get("languages"),
-            achievements=cv_dict.get("achievements"),
-            publications=cv_dict.get("publications"),
-            raw_parsed_json=raw_parsed_json  # Store the raw parsed JSON
+            parsed_data=structured_cv.dict(),
+            contact_name=contact_info.name,
+            contact_email=contact_info.email
         )
-        
-        logger.info(f"Saved CV record with ID: {cv_record.id}")
-        return cv_record
+    
+    def save_cv_and_get_id(self, file_upload_id: int, structured_cv: StructuredCV,
+                           raw_parsed_json: Dict[str, Any]) -> int:
+        """Save parsed CV data and return ID immediately using proper session management"""
+        try:
+            with self.get_db() as db:
+                contact_info = structured_cv.contact_info
+                
+                cv_record = CVRecord(
+                    file_upload_id=file_upload_id,
+                    parsed_data=structured_cv.dict(),
+                    contact_name=contact_info.name if contact_info else None,
+                    contact_email=contact_info.email if contact_info else None,
+                    parsed_date=datetime.utcnow()
+                )
+                
+                db.add(cv_record)
+                db.flush()  # Flush to get the ID without committing
+                record_id = cv_record.id  # Get the ID while still in session
+                db.commit()  # Now commit the transaction
+                
+                return record_id
+                
+        except Exception as e:
+            logger.error(f"Error saving CV record: {str(e)}")
+            raise
     
     def get_structured_cv_by_id(self, cv_id: int) -> Optional[StructuredCV]:
-        """Get StructuredCV from stored data without re-parsing"""
-        cv_record = self.get_by_id(cv_id)
-        if not cv_record:
-            return None
-        
-        # Use the raw parsed JSON to reconstruct StructuredCV
-        cv_data = cv_record.to_structured_cv_dict()
-        
-        # Import here to avoid circular imports
-        from app.services.cv_parser import GeminiCVParser
-        parser = GeminiCVParser()
-        
-        # Use the parser's validation method to create StructuredCV from stored JSON
-        return parser._validate_and_structure(cv_data)
-    
-    def get_recent_cvs(self, limit: int = 10) -> List[Dict[str, Any]]:
-        """Get recent CV records with file information"""
-        with self.get_session() as session:
-            results = session.query(CVRecord, FileUpload)\
-                .join(FileUpload, CVRecord.file_upload_id == FileUpload.id)\
-                .order_by(CVRecord.created_at.desc())\
-                .limit(limit)\
-                .all()
+        """Get StructuredCV object from stored data without re-parsing"""
+        with self.get_db() as db:
+            cv_record = db.query(CVRecord).filter(CVRecord.id == cv_id).first()
             
-            cv_list = []
-            for cv_record, file_upload in results:
-                cv_data = cv_record.to_dict()
-                cv_data["filename"] = file_upload.original_filename
-                cv_data["upload_date"] = file_upload.upload_date.isoformat()
-                cv_list.append(cv_data)
+            if not cv_record:
+                return None
             
-            return cv_list
+            try:
+                # Access all needed attributes while session is still active
+                parsed_data = cv_record.parsed_data
+                contact_name = cv_record.contact_name
+                contact_email = cv_record.contact_email
+                
+                # Reconstruct from stored parsed data
+                if parsed_data:
+                    # Create StructuredCV from the stored JSON data
+                    return StructuredCV(**parsed_data)
+                else:
+                    # Fallback: create basic StructuredCV from database fields
+                    return StructuredCV(
+                        personal_info={
+                            "name": contact_name or "Unknown",
+                            "email": contact_email or "",
+                        },
+                        summary="",
+                        experience=[],
+                        education=[],
+                        skills=[],
+                        certifications=[],
+                        languages=[]
+                    )
+                    
+            except Exception as e:
+                logger.error(f"Error reconstructing CV: {str(e)}")
+                return None
     
     def get_cv_with_file_info(self, cv_id: int) -> Optional[Dict[str, Any]]:
-        """Get CV with associated file information"""
-        with self.get_session() as session:
-            result = session.query(CVRecord, FileUpload)\
-                .join(FileUpload, CVRecord.file_upload_id == FileUpload.id)\
+        """Get CV with file information"""
+        with self.get_db() as db:
+            result = db.query(CVRecord, FileUpload)\
+                .join(FileUpload)\
                 .filter(CVRecord.id == cv_id)\
                 .first()
             
-            if result:
-                cv_record, file_upload = result
-                cv_data = cv_record.to_dict()
-                cv_data["filename"] = file_upload.original_filename
-                cv_data["upload_date"] = file_upload.upload_date.isoformat()
-                return cv_data
+            if not result:
+                return None
             
-            return None
+            cv, file = result
+            return {
+                "id": cv.id,
+                "filename": file.original_filename,
+                "file_size": file.file_size,
+                "upload_date": file.upload_date,
+                "contact_name": cv.contact_name,
+                "contact_email": cv.contact_email,
+                "parsed_data": cv.parsed_data,
+                "parsed_date": cv.parsed_date
+            }
+    
+    def get_recent_cvs(self, limit: int = 10) -> List[Dict[str, Any]]:
+        """Get recent CVs"""
+        with self.get_db() as db:
+            results = db.query(CVRecord, FileUpload)\
+                .join(FileUpload)\
+                .order_by(CVRecord.parsed_date.desc())\
+                .limit(limit)\
+                .all()
+            
+            return [{
+                "id": cv.id,
+                "filename": file.original_filename,
+                "contact_name": cv.contact_name,
+                "contact_email": cv.contact_email,
+                "parsed_date": cv.parsed_date,
+                "upload_date": file.upload_date
+            } for cv, file in results]
 
 class FileUploadRepository(BaseRepository[FileUpload]):
-    """Repository for file upload operations"""
+    """Simple file upload repository"""
     
     def __init__(self):
         super().__init__(FileUpload)
     
-    def create_upload_record(self, filename: str, original_filename: str, 
-                           file_size: int, file_type: str = "cv") -> FileUpload:
-        """Create a new file upload record"""
-        upload = self.create(
+    def create_upload_record(self, filename: str, original_filename: str,
+                           file_size: int, file_type: str) -> FileUpload:
+        """Create file upload record"""
+        return self.create(
             filename=filename,
             original_filename=original_filename,
             file_size=file_size,
-            file_type=file_type,
-            status="pending"
+            file_type=file_type
         )
-        logger.info(f"Created file upload record with ID: {upload.id}")
-        return upload
     
     def update_status(self, upload_id: int, status: str) -> Optional[FileUpload]:
-        """Update upload status"""
-        return self.update(upload_id, status=status)
+        """Update upload status (add status field if needed)"""
+        # For now, just log it since we don't have status field
+        logger.info(f"Upload {upload_id} status: {status}")
+        return self.get(upload_id)
+    
+    def create_upload_record_and_get_id(self, filename: str, original_filename: str, 
+                                       file_size: int, file_type: str) -> int:
+        """Create upload record and return ID immediately using proper session management"""
+        try:
+            with self.get_db() as db:
+                upload_record = FileUpload(
+                    filename=filename,
+                    original_filename=original_filename,
+                    file_size=file_size,
+                    file_type=file_type,
+                    upload_date=datetime.utcnow()
+                )
+                
+                db.add(upload_record)
+                db.flush()  # Flush to get the ID without committing
+                record_id = upload_record.id  # Get the ID while still in session
+                db.commit()  # Now commit the transaction
+                
+                return record_id
+                
+        except Exception as e:
+            logger.error(f"Error creating upload record: {str(e)}")
+            raise
