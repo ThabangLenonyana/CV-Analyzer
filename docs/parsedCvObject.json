@@ -1,0 +1,197 @@
+{
+    "contact_info": {
+        "name": "Thabang Lenonyana",
+        "email": "lenonyanathabang@gmail.com",
+        "phone": "066 251 3572",
+        "linkedin": "linktr.ee/thabanglenonyana",
+        "github": null,
+        "location": null
+    },
+    "summary": "I'm a motivated individual with strong analytical and problem-solving skills. Seeking to join a fast-paced, innovation-driven tech company where I can apply my knowledge of Java, cloud platforms, and Al to build scalable and impactful software solutions",
+    "skills": [
+        "Communication",
+        "Teamwork",
+        "Adaptability",
+        "Problem-Solving",
+        "Analytical Thinking",
+        "Data Analysis",
+        "AI"
+    ],
+    "technical_skills": {
+        "Programming Languages": [
+            "Java",
+            "Python",
+            "SQL",
+            "Javascript",
+            "TypeScript"
+        ],
+        "Frameworks": [
+            "Spring Boot",
+            "Django",
+            "Flask",
+            "React",
+            "Angular"
+        ],
+        "Databases": [
+            "PostgreSQL"
+        ],
+        "Tools": [
+            "Git",
+            "GitHub Actions",
+            "Docker",
+            "Power BI",
+            "Streamlit",
+            "pandas",
+            "matplotlib"
+        ],
+        "Cloud": [
+            "Microsoft Azure",
+            "Google Cloud Platform",
+            "AWS"
+        ]
+    },
+    "experiences": [
+        {
+            "company": "Enviro365 IT Solutions",
+            "position": "Graduate Java Developer",
+            "start_date": "Mar 2025",
+            "end_date": "Present",
+            "location": "Centurion",
+            "responsibilities": [
+                "Collaborate with a team to design and maintain efficient Java applications across the SDLC.",
+                "Write clean, scalable code and participate in code reviews to ensure high-quality deliverables."
+            ],
+            "achievements": []
+        },
+        {
+            "company": "Outlier AI",
+            "position": "Prompt Engineer",
+            "start_date": "Sep 2024",
+            "end_date": "Mar 2025",
+            "location": "Remote",
+            "responsibilities": [
+                "Designed and evaluated prompts for AI models to generate accurate and efficient code solutions.",
+                "Tuned and optimized model responses by analyzing performance and iterating prompt strategies"
+            ],
+            "achievements": []
+        },
+        {
+            "company": "Faith Mangope Technology & Leadership Institute",
+            "position": "Software Development Intern",
+            "start_date": "Feb 2024",
+            "end_date": "Feb 2025",
+            "location": "Randburg",
+            "responsibilities": [
+                "Developed Python-based software and managed applications hosted on Azure.",
+                "Collaborated in cross-functional teams, strengthening communication, teamwork, and empathy.",
+                "Analyzed data using Power BI, improving data-driven decision-making and reporting."
+            ],
+            "achievements": []
+        }
+    ],
+    "education": [
+        {
+            "institution": "International University of Applied Science",
+            "degree": "Bachelor's Degree in Computer Science",
+            "field_of_study": null,
+            "start_date": "Jun 2024",
+            "end_date": "Jun 2027",
+            "gpa": null,
+            "achievements": []
+        },
+        {
+            "institution": "HyperionDev",
+            "degree": "Higher Certificate in Software Engineering",
+            "field_of_study": null,
+            "start_date": "Jun 2023",
+            "end_date": "Dec 2023",
+            "gpa": null,
+            "achievements": []
+        },
+        {
+            "institution": "Nelson Mandela University",
+            "degree": "Bachelor's Degree in Architecture",
+            "field_of_study": null,
+            "start_date": "Jan 2019",
+            "end_date": "Dec 2022",
+            "gpa": null,
+            "achievements": []
+        }
+    ],
+    "projects": [
+        {
+            "name": "Waste Management Application",
+            "description": "Developed a waste sorting mobile application for Enviro365, aimed at promoting sustainable waste management practices by providing users with waste category lookup, disposal guidelines, and recycling tips. Designed and implemented RESTful APIs using Spring Boot to enable seamless communication between the frontend and backend systems, ensuring efficient data retrieval and manipulation.",
+            "technologies": [
+                "Java",
+                "Spring Boot",
+                "TypeScript",
+                "Angular",
+                "HTML/CSS",
+                "REST APIs",
+                "Docker"
+            ],
+            "role": null,
+            "highlights": []
+        },
+        {
+            "name": "IELTS TUTOR - International English Language Testing System",
+            "description": "Built a real-time IELTS speaking simulator using Python, Azure Speech Services, and OpenAl, providing users with feedback through a conversational interface. Implemented data processing and reporting features using Streamlit, pandas, and matplotlib.",
+            "technologies": [
+                "Python",
+                "Streamlit",
+                "Azure Speech Services",
+                "Azure OpenAI",
+                "LLM"
+            ],
+            "role": null,
+            "highlights": []
+        },
+        {
+            "name": "Flexiculture E-commerce Website",
+            "description": "Developed a fully responsive e-commerce platform for FlexiCulture, a streetwear clothing brand, using modern web technologies. The website features secure checkout, product catalog management, and user-friendly navigation to enhance customer experience and streamline online sales. Delivered a scalable, visually compelling solution aligned with the brand's identity.",
+            "technologies": [],
+            "role": null,
+            "highlights": []
+        }
+    ],
+    "certifications": [
+        {
+            "name": "Microsoft Azure - AZ900",
+            "issuer": null,
+            "date": null,
+            "credential_id": null
+        },
+        {
+            "name": "Certified Associate Python Programmer - PCAP",
+            "issuer": null,
+            "date": null,
+            "credential_id": null
+        },
+        {
+            "name": "Oracle Certified Associate Java SE 8 Programmer - 1Z0-808",
+            "issuer": null,
+            "date": null,
+            "credential_id": null
+        },
+        {
+            "name": "ISC2 Certified in Cybersecurity - CC",
+            "issuer": null,
+            "date": null,
+            "credential_id": null
+        }
+    ],
+    "languages": [],
+    "achievements": [
+        "Junior Chamber International (JCI Sandton) Mentee (Mar 2025 - Present)",
+        "Geekulcha Annual Hackathon #GKHack24 - Recognized for innovation and impact (Oct 2024)",
+        "Nedbank Innovators of Tomorrow Hackathon Winner (Feb 2024)"
+    ],
+    "publications": [],
+    "raw_text": "Thabang Lenonyana\nSoftware Developer\n066 251 3572 | lenonyanathabang@gmail.com |\nlinktr.ee/thabanglenonyana\nI'm a motivated individual with strong analytical and problem-solving skills. Seeking to join a fast-paced, innovation-driven tech\ncompany where I can apply my knowledge of Java, cloud platforms, and Al to build scalable and impactful software solutions\nEDUCATION & CERTIFICATIONS\nTertiary Qualifications\nBachelor's Degree in Computer Science – International University of Applied Science\nJun 2024 – Jun 2027\nHigher Certificate in Software Engineering – HyperionDev\nJun 2023 - Dec 2023\nBachelor's Degree in Architecture – Nelson Mandela University\nJan 2019- Dec 2022\nCertifications\nMicrosoft Azure - AZ900\nCertified Associate Python Programmer - PCAP\nOracle Certified Associate Java SE 8 Programmer - 1Z0-808\nISC2 Certified in Cybersecurity - CC\nPROFESSIONAL EXPERIENCE\nEnviro365 IT Solutions | Centurion\nGraduate Java Developer\nCollaborate with a team to design and maintain efficient Java applications across the SDLC.\nWrite clean, scalable code and participate in code reviews to ensure high-quality deliverables.\nOutlier Al | Remote\nPrompt Engineer\nDesigned and evaluated prompts for Al models to generate accurate and efficient code solutions.\nTuned and optimized model responses by analyzing performance and iterating prompt strategies\nFaith Mangope Technology & Leadership Institute | Randburg\nSoftware Development Intern\n- Developed Python-based software and managed applications hosted on Azure.\nCollaborated in cross-functional teams, strengthening communication, teamwork, and empathy.\n- Analyzed data using Power BI, improving data-driven decision-making and reporting.\nSKILLS & COMPETENCIES\nMar 2025 - Present\nSep 2024 - Mar 2025\nFeb 2024 - Feb 2025\nSoft Skills\nProgramming Languages\nFrameworks\nOther\nCommunication, Teamwork, Adaptability, Problem-Solving, Analytical Thinking\nJava, Python, SQL, Javascript, Typescript\nSpring Boot, Django, Flask, React, Angular\nGoogle Cloud Platform, Microsoft Azure, GitHub Actions, PostgreSQL, DevOps,\nWeb Development, Data Analytics, Al\nAWARDS & HONORS\nJunior Chamber International (JCI Sandton) Mentee\nGeekulcha Annual Hackathon #GKHack24 - Recognized for innovation and impact\nNedbank Innovators of Tomorrow Hackathon Winner\nPROJECTS\nMar 2025 - Present\nOct 2024\nFeb 2024\nWaste Management Application\nLive Web App\nDeveloped a waste sorting mobile application for Enviro365, aimed at promoting sustainable waste management practices by\nproviding users with waste category lookup, disposal guidelines, and recycling tips. Designed and implemented RESTful APIs\nusing Spring Boot to enable seamless communication between the frontend and backend systems, ensuring efficient data\nretrieval and manipulation.\nJava / Spring Boot / TypeScript / Angular / HTML/CSS / REST APIs / Docker\nIELTS TUTOR - International English Language Testing System\nLive Web App\nBuilt a real-time IELTS speaking simulator using Python, Azure Speech Services, and OpenAl, providing users with feedback\nthrough a conversational interface. Implemented data processing and reporting features using Streamlit, pandas, and matplotlib.\nPython / Streamlit / Azure Speech Services / Azure OpenAI / LLM\nFlexiculture E-commerce Website (Client Project - Feb 2025)\nLive Website\nDeveloped a fully responsive e-commerce platform for FlexiCulture, a streetwear clothing brand, using modern web technologies.\nThe website features secure checkout, product catalog management, and user-friendly navigation to enhance customer experience\nand streamline online sales. Delivered a scalable, visually compelling solution aligned with the brand's identity.\nREFERENCES\nAvailable upon request",
+    "_metadata": {
+        "parsed_at": "2025-06-16T21:02:52.656280",
+        "source_file": "/Users/thabanglenonyana/Development/CV-Analyzer/uploads/Thabang-Resume-2025.pdf",
+        "parser_version": "1.0.0"
+    }
+}
