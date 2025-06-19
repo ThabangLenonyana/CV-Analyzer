@@ -1,12 +1,11 @@
 # Specify Python version and required system packages
 [phases.setup]
-nixPkgs = ["python311", "gcc"]
+nixPkgs = ["python311", "python311Packages.pip", "gcc"]
 
-# Ensure pip is available and install dependencies
+# Install dependencies
 [phases.install]
 cmds = [
-    "python -m ensurepip --upgrade",
-    "python -m pip install --upgrade pip",
+    "pip install --upgrade pip",
     "pip install -r requirements.txt"
 ]
 
