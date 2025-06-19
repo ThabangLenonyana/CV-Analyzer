@@ -7,7 +7,7 @@ pytest
 
 # Web framework
 fastapi
-uvicorn
+uvicorn[standard]
 jinja2
 
 # File parsing
