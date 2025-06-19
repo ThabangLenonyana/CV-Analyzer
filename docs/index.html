@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV Analyzer: Technical Presentation</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Highlight.js for code syntax highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    
+    <style>
+        /* Custom styles with the new color palette */
+        :root {
+            --color-blue: #0B2545;
+            --color-yellow: #FFD54E;
+            --color-white: #FFFFFF;
+            --color-light-gray: #f8fafc;
+            --color-text: #0B2545;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-light-gray);
+            color: var(--color-text);
+        }
+        .section-card {
+            background-color: var(--color-white);
+            border-radius: 0.5rem;
+            padding: 2.5rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+            border: 1px solid #e5e7eb;
+        }
+        h1, h2, h3 {
+            font-weight: 700;
+            color: var(--color-blue);
+        }
+        h2 {
+            font-size: 1.875rem; /* 3xl */
+            line-height: 2.25rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 0.75rem;
+        }
+        h3 {
+            font-size: 1.25rem; /* xl */
+            line-height: 1.75rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: var(--color-blue);
+        }
+        .mermaid {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: transparent;
+            padding: 1rem 0;
+            margin-top: 1rem;
+        }
+        pre code.hljs {
+            border-radius: 0.5rem;
+            padding: 1rem !important;
+        }
+        .tag {
+            display: inline-block;
+            background-color: #eef2ff; /* A lighter blue for contrast */
+            color: var(--color-blue);
+            border: 1px solid #c7d2fe;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .stat-card {
+            background-color: var(--color-white);
+            border: 1px solid #e5e7eb;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.07), 0 4px 6px -4px rgb(0 0 0 / 0.07);
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header -->
+    <header class="bg-white sticky top-0 z-50 border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h1 class="text-2xl font-bold">CV Analyzer</h1>
+                    <p class="text-sm text-gray-500">Technical Presentation</p>
+                </div>
+                <a href="#q-a" class="hidden md:inline-block bg-yellow-400 text-blue-900 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-yellow-500 transition-colors">
+                    Contact & Questions
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+
+        <!-- Executive Summary Section -->
+        <section id="summary" class="section-card">
+            <h2>Executive Summary</h2>
+            <p class="text-lg text-gray-600 mb-6">
+                <strong>CV Analyzer</strong> is an LLM-powered application that performs semantic analysis between resumes and job descriptions, providing quantitative matching scores and actionable insights.
+            </p>
+            <h3>Key Capabilities</h3>
+            <ul class="space-y-3 list-inside text-gray-700 mb-6">
+                 <li class="flex items-start"><svg class="w-6 h-6 text-yellow-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span><strong>Intelligent Document Processing:</strong> Gemini Vision API for advanced CV parsing.</span></li>
+                <li class="flex items-start"><svg class="w-6 h-6 text-yellow-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span><strong>Semantic Analysis:</strong> LLM-based deep understanding of skills & experience.</span></li>
+                <li class="flex items-start"><svg class="w-6 h-6 text-yellow-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span><strong>Structured Output:</strong> JSON-formatted analysis with clear scoring metrics.</span></li>
+                <li class="flex items-start"><svg class="w-6 h-6 text-yellow-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span><strong>Scalable Architecture:</strong> Stateless backend with external LLM API integration.</span></li>
+            </ul>
+            <h3>Technology Stack</h3>
+            <div><span class="tag">Python</span><span class="tag">FastAPI</span><span class="tag">SQLAlchemy</span><span class="tag">HTML5</span><span class="tag">Alpine.js</span><span class="tag">Tailwind CSS</span><span class="tag">Google Gemini API</span><span class="tag">PostgreSQL</span></div>
+        </section>
+
+        <!-- System Architecture Section -->
+        <section id="architecture" class="section-card">
+            <h2>System Architecture</h2>
+            <div class="mermaid">
+graph TB
+    subgraph "Frontend Layer"
+        A[Web Interface<br/>Alpine.js + Tailwind]
+    end
+    subgraph "Service Layer"
+        B[FastAPI Server]
+        C[CV Processor<br/>Orchestrator]
+        H[Analyzer<br/>Gemini 2.0]
+    end
+    subgraph "Data Layer"
+        I[(Database<br/>PostgreSQL)]
+    end
+    subgraph "External APIs"
+        N[Gemini Vision API]
+        O[Gemini 2.0 API]
+    end
+    
+    A -->|HTTP/REST| B; B --> C; C --> N; B --> H; H --> O; B -.-> I
+    
+    style A fill:#FFD54E,stroke:#0B2545
+    style C fill:#0B2545,stroke:#0B2545,color:#fff
+    style N fill:#34a853,stroke:#16a34a,color:#fff
+    style O fill:#4285f4,stroke:#1d4ed8,color:#fff
+    style I fill:#f3f4f6,stroke:#374151
+            </div>
+            <h3>Request Flow</h3>
+            <ol class="space-y-4 mt-6 text-gray-700">
+                <li class="flex items-start"><span class="flex items-center justify-center bg-yellow-200 text-yellow-800 rounded-full w-8 h-8 mr-4 font-bold text-sm flex-shrink-0">1</span><div><strong>Upload:</strong> User uploads a resume via the drag-and-drop interface.</div></li>
+                <li class="flex items-start"><span class="flex items-center justify-center bg-yellow-200 text-yellow-800 rounded-full w-8 h-8 mr-4 font-bold text-sm flex-shrink-0">2</span><div><strong>Process:</strong> The backend orchestrates the file handling and parsing workflow.</div></li>
+                <li class="flex items-start"><span class="flex items-center justify-center bg-yellow-200 text-yellow-800 rounded-full w-8 h-8 mr-4 font-bold text-sm flex-shrink-0">3</span><div><strong>Parse:</strong> Gemini Vision API extracts structured JSON data from the resume.</div></li>
+                <li class="flex items-start"><span class="flex items-center justify-center bg-yellow-200 text-yellow-800 rounded-full w-8 h-8 mr-4 font-bold text-sm flex-shrink-0">4</span><div><strong>Analyze:</strong> Gemini 2.0 API performs semantic matching against a selected job description.</div></li>
+                <li class="flex items-start"><span class="flex items-center justify-center bg-yellow-200 text-yellow-800 rounded-full w-8 h-8 mr-4 font-bold text-sm flex-shrink-0">5</span><div><strong>Store:</strong> Analysis results are cached in the database for performance and history.</div></li>
+                <li class="flex items-start"><span class="flex items-center justify-center bg-yellow-200 text-yellow-800 rounded-full w-8 h-8 mr-4 font-bold text-sm flex-shrink-0">6</span><div><strong>Display:</strong> The UI presents scores and actionable insights to the hiring manager.</div></li>
+            </ol>
+        </section>
+
+        <!-- Prompt Engineering Section -->
+        <section id="prompts" class="section-card">
+            <h2>Prompt Engineering: The Intelligence Layer</h2>
+            <p class="text-gray-600 mb-6">Our system's precision comes from meticulously crafted, multi-stage prompts. We enforce a strict JSON-only output format to ensure reliable, structured data for downstream processing.</p>
+            
+            <h3>CV Parsing Prompt Strategy</h3>
+            <pre><code class="language-python">
+# This prompt instructs Gemini Vision to act as an expert parser.
+def create_extraction_prompt():
+    return """
+    You are an expert CV/Resume parser. Extract ALL information 
+    from the provided document and return it as a valid JSON object.
+
+    **IMPORTANT INSTRUCTIONS:**
+    1. Return ONLY valid JSON - no markdown, no explanations.
+    2. Use null for missing optional fields.
+    3. Categorize technical skills appropriately.
+    """
+            </code></pre>
+
+            <h3>Analysis Prompt Strategy</h3>
+            <p class="text-gray-600 mt-6 mb-4">For analysis, we use a chain of prompts to evaluate different facets of the candidate's profile, ensuring a comprehensive and nuanced evaluation.</p>
+            <pre><code class="language-python">
+# 1. Skills Analysis Prompt
+skill_analysis_prompt = f\"\"\"
+Analyze the skills match between the CV and job requirements.
+CV Skills: {cv_skills_json}
+Required Skills: {job_skills_json}
+
+Return a JSON object with "strong_matches", "partial_matches", 
+"critical_gaps", and a "skill_strength_rating".
+\"\"\"
+
+# 2. Experience Analysis Prompt
+experience_prompt = f\"\"\"
+Analyze how well the candidate's experience matches the job.
+Candidate Experience: {experience_json}
+Job Requirements: {job_requirements_json}
+
+Analyze role similarity, industry relevance, and achievement quality.
+Return JSON with specific metrics and a "relevance_score".
+\"\"\"
+            </code></pre>
+        </section>
+
+        <!-- Analysis & Scoring Section -->
+        <section id="analysis-scoring" class="section-card">
+            <h2>Analysis Module & Scoring Algorithm</h2>
+            <p class="text-gray-600">The Analysis module aggregates scores from the multi-stage prompt chain into a single, weighted suitability score, providing a clear, top-level metric for decision-making.</p>
+            <div class="mermaid">
+graph TD
+    A[CV + Job Data] --> B[Gemini 2.0<br/>Skills Analysis]
+    A --> C[Gemini 2.0<br/>Experience Analysis]
+    A --> D[Gemini 2.0<br/>Education Analysis]
+    
+    B --> E[Technical Score<br/>40% weight]
+    C --> F[Experience Score<br/>35% weight]
+    D --> G[Education Score<br/>25% weight]
+    
+    E --> H[Weighted<br/>Calculation]
+    F --> H
+    G --> H
+    
+    H --> I[Overall Score<br/>0-100]
+    
+    style B,C,D fill:#0B2545,stroke:#0B2545,color:#fff
+    style I fill:#FFD54E,stroke:#0B2545
+            </div>
+        </section>
+        
+        <!-- Data Model Section (UML) -->
+        <section id="data-model" class="section-card">
+            <h2>Data Model & Storage</h2>
+            <p class="text-gray-600">A normalized schema ensures data integrity and efficient querying. We use Pydantic models for validation which map directly to these database entities.</p>
+            <div class="mermaid">
+classDiagram
+    direction LR
+    class FileUpload {
+        +Integer id
+        +String filename
+        +DateTime upload_date
+    }
+    class CVRecord {
+        +Integer id
+        +JSON parsed_data
+        +String contact_name
+    }
+    class JobDescription {
+        +Integer id
+        +String job_title
+        +JSON job_data
+    }
+    class Analysis {
+        +Integer id
+        +Float suitability_score
+        +JSON analysis_data
+    }
+
+    FileUpload "1" -- "1" CVRecord : contains
+    CVRecord "1" -- "*" Analysis : analyzed for
+    JobDescription "1" -- "*" Analysis : analyzed against
+            </div>
+        </section>
+
+        <!-- Technical Differentiators Section -->
+        <section id="differentiators" class="section-card">
+            <h2>Technical Differentiators</h2>
+            <p class="text-gray-600 mb-6">Our architecture is designed for performance, scalability, and reliability, setting it apart from simpler implementations.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="!mt-0">Why This Architecture?</h3>
+                    <ul class="space-y-3 list-inside text-gray-700">
+                        <li class="flex"><svg class="w-5 h-5 text-yellow-500 mr-2 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg><span><strong>Dual LLM Strategy:</strong> Using the best model for each task (Vision for parsing, Text for analysis).</span></li>
+                        <li class="flex"><svg class="w-5 h-5 text-yellow-500 mr-2 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg><span><strong>Async-First Design:</strong> FastAPI allows for high-concurrency I/O operations, crucial for API calls.</span></li>
+                        <li class="flex"><svg class="w-5 h-5 text-yellow-500 mr-2 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg><span><strong>Repository Pattern:</strong> Decouples business logic from data access for easier testing and maintenance.</span></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="!mt-0">Key Implementation Details</h3>
+                    <ul class="space-y-3 list-inside text-gray-700">
+                        <li class="flex"><svg class="w-5 h-5 text-yellow-500 mr-2 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg><span><strong>Pydantic Models:</strong> Enforces strict data validation at the API boundary.</span></li>
+                        <li class="flex"><svg class="w-5 h-5 text-yellow-500 mr-2 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg><span><strong>Robust Retry Logic:</strong> Implements exponential backoff for external API calls to handle transient errors.</span></li>
+                        <li class="flex"><svg class="w-5 h-5 text-yellow-500 mr-2 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg><span><strong>Flexible JSON Storage:</strong> Allows for easy schema evolution as prompt outputs change.</span></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Performance Section -->
+        <section id="performance" class="section-card">
+            <h2>Performance & Security</h2>
+            <h3>Current Performance Metrics</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+                <div class="stat-card">
+                    <div class="flex items-center justify-center mx-auto bg-yellow-100 rounded-full w-12 h-12 mb-4"><svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l-1.586-1.586a2 2 0 00-2.828 0L6 14"></path></svg></div>
+                    <p class="text-sm font-medium" style="color:var(--color-blue);">CV Parsing Time</p>
+                    <p class="text-3xl font-bold" style="color:var(--color-blue);">~3-6s</p>
+                </div>
+                <div class="stat-card">
+                    <div class="flex items-center justify-center mx-auto bg-yellow-100 rounded-full w-12 h-12 mb-4"><svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg></div>
+                    <p class="text-sm font-medium" style="color:var(--color-blue);">LLM Analysis Time</p>
+                    <p class="text-3xl font-bold" style="color:var(--color-blue);">~4-8s</p>
+                </div>
+                <div class="stat-card">
+                    <div class="flex items-center justify-center mx-auto bg-yellow-100 rounded-full w-12 h-12 mb-4"><svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div>
+                    <p class="text-sm font-medium" style="color:var(--color-blue);">Total End-to-End</p>
+                    <p class="text-3xl font-bold" style="color:var(--color-blue);">~10-15s</p>
+                </div>
+            </div>
+            <h3 class="mt-12">Security Considerations</h3>
+            <ul class="space-y-3 list-inside text-gray-700">
+                <li class="flex"><svg class="w-5 h-5 text-yellow-500 mr-2 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a5 5 0 00-5 5v2a2 2 0 00-2 2v5a2 2 0 002 2h10a2 2 0 002-2v-5a2 2 0 00-2-2V7a5 5 0 00-5-5zm0 2a3 3 0 013 3v2H7V7a3 3 0 013-3z"></path></svg><span><strong>PII Handling:</strong> CVs are treated as sensitive data and are not stored long-term unless required.</span></li>
+                <li class="flex"><svg class="w-5 h-5 text-yellow-500 mr-2 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a5 5 0 00-5 5v2a2 2 0 00-2 2v5a2 2 0 002 2h10a2 2 0 002-2v-5a2 2 0 00-2-2V7a5 5 0 00-5-5zm0 2a3 3 0 013 3v2H7V7a3 3 0 013-3z"></path></svg><span><strong>API Security:</strong> API keys are managed via environment variables and are not exposed in code.</span></li>
+                <li class="flex"><svg class="w-5 h-5 text-yellow-500 mr-2 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a5 5 0 00-5 5v2a2 2 0 00-2 2v5a2 2 0 002 2h10a2 2 0 002-2v-5a2 2 0 00-2-2V7a5 5 0 00-5-5zm0 2a3 3 0 013 3v2H7V7a3 3 0 013-3z"></path></svg><span><strong>Access Control:</strong> Future iterations will include role-based access for multi-user environments.</span></li>
+            </ul>
+        </section>
+
+        <!-- Future Enhancements -->
+        <section id="roadmap" class="section-card">
+             <h2>Future Roadmap</h2>
+             <p class="text-gray-600 mb-6">Our architecture is built to evolve. The immediate roadmap focuses on user-facing features, while long-term plans involve deeper ML integration.</p>
+            <div class="mermaid">
+graph LR
+    A[Current:<br/>Service-Oriented] --> B[Next:<br/>Event-Driven]
+    B --> C[Future:<br/>ML Pipeline]
+    
+    subgraph "Event-Driven"
+        D[Batch Processing]
+        E[Async Workers]
+    end
+    
+    subgraph "ML Pipeline"
+        G[Fine-Tuned Models]
+        H[Bias Detection]
+        I[Feedback Loop]
+    end
+            </div>
+        </section>
+
+        <!-- Q&A Section -->
+        <section id="q-a" class="section-card text-center" style="background-color: var(--color-blue);">
+            <h2 class="text-white !border-yellow-400">Questions & Discussion</h2>
+            <p class="text-gray-300 max-w-2xl mx-auto">Key topics for discussion include API cost optimization, multi-tenant architecture, and integration with existing HR systems.</p>
+            <div class="mt-8">
+                <a href="#" class="bg-yellow-400 text-blue-900 px-8 py-3 rounded-lg font-bold hover:bg-yellow-500 transition-colors">
+                    Access Project Repository
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="text-center py-8">
+        <p class="text-gray-500 text-sm">&copy; 2024 CV Analyzer Project. All Rights Reserved.</p>
+    </footer>
+
+    <!-- Mermaid.js for diagrams -->
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: 'base',
+            themeVariables: {
+                primaryColor: '#FFFFFF',
+                primaryTextColor: '#0B2545',
+                primaryBorderColor: '#e2e8f0',
+                lineColor: '#0B2545',
+                secondaryColor: '#f8fafc',
+                tertiaryColor: '#f1f5f9'
+            }
+        });
+    </script>
+    
+    <!-- Highlight.js for code blocks -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+
+</body>
+</html>
