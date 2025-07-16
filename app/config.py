@@ -42,7 +42,7 @@ class Config:
     APP_VERSION = "1.0.0"
     DEBUG = os.getenv("DEBUG", "False").lower() == "true"
     HOST = os.getenv("HOST", "0.0.0.0")
-    PORT = int(os.getenv("PORT", "8000"))
+    PORT = int(os.getenv("PORT", "8080"))
     
     # CORS Configuration
     CORS_ORIGINS = os.getenv("CORS_ORIGINS", "*").split(",")
